@@ -1,0 +1,199 @@
+{
+  "question-keys": [
+    {
+      "question": "1-Where?",
+      "answer": "number"
+    },
+    {
+      "question": "2-Years experience?",
+      "answer": "number"
+    },
+    {
+      "question": "3-Org type?",
+      "answer": [
+        "Freelance / Self-employed (free agent)",
+        "Collective (collaborative group of independents)",
+        "Partnership (shared ownership)",
+        "Studio (employee at small organization, 3–10)",
+        "Agency (employee at large organization, 11+)",
+        "In-house (employee at a brand)",
+        "Unemployed"
+      ]
+    },
+    {
+      "question": "4-Industry?",
+      "answer": [
+        "Advertising / marketing",
+        "Architecture",
+        "Brand Strategy",
+        "Content Strategy",
+        "Design, digital",
+        "Design, print",
+        "Design, digital and print",
+        "Technology",
+        "PR",
+        "Product Management",
+        "Publishing",
+        "Non-profit",
+        "Other"
+      ]
+    },
+    {
+      "question": "5-# employees?",
+      "answer": "number"
+    },
+    {
+      "question": "6-Title?",
+      "answer": [
+        "Art Director",
+        "Creative Director, agency",
+        "Creative Director, in-house",
+        "Design Director, agency",
+        "Design Director, in-house",
+        "Developer, mobile app",
+        "Developer, front end",
+        "Developer, back end",
+        "Chief Design Officer",
+        "Design Manager",
+        "Designer, digital",
+        "Designer, print",
+        "Designer, digital and print",
+        "Engineer",
+        "Executive Creative Director",
+        "Executive Producer",
+        "Freelancer, independent",
+        "Freelancer, staffing agency",
+        "Director of Production",
+        "Information Architect",
+        "Junior Designer, digital",
+        "Junior Designer, print",
+        "Junior Designer, digital and print",
+        "Marketing Director",
+        "Motion Designer/Animator",
+        "Motion/Video Editor",
+        "New Business Manager",
+        "Operations Director",
+        "Owner, Partner, or Principal",
+        "Producer, digital",
+        "Producer, print",
+        "Producer, digital and print",
+        "Production Manager",
+        "Project Manager, print",
+        "Project Manager, digital",
+        "Project Manager, digital and print",
+        "Researcher",
+        "Self-employed (no employees)",
+        "Senior Designer, digital",
+        "Senior Designer, print",
+        "Senior Designer, digital and print",
+        "Social Media Manager",
+        "Strategist, design",
+        "Strategist, content",
+        "Strategy Director",
+        "Type Designer",
+        "Usability Analyst",
+        "User Experience Designer",
+        "Writer / Copywriter",
+        "Other"
+      ]
+    },
+    {
+      "question": "7-Seniority level?",
+      "answer": [
+        "Junior",
+        "Mid-level",
+        "Senior",
+        "Leadership"
+      ]
+    },
+    {
+      "question": "8-Design categories?",
+      "answer": [
+        "Book design",
+        "Publication design",
+        "Type/font design",
+        "Graphic design",
+        "Illustration",
+        "Photography",
+        "Multimedia",
+        "Digital",
+        "Development",
+        "Motion design",
+        "User experience",
+        "Information architecture",
+        "Apps, desktop",
+        "Apps, mobile",
+        "Apps, tablet",
+        "Apps, web",
+        "User interface",
+        "Service design",
+        "Environmental graphics",
+        "Industrial design",
+        "Corporate identity",
+        "Annual reports and corporate collateral",
+        "Communications strategy",
+        "Packaging",
+        "Advertising/marketing",
+        "Direct mail",
+        "Presentations",
+        "Copywriting/technical writing",
+        "Exhibitions/events",
+        "Broadcast/video",
+        "Pro bono",
+        "Other",
+        "Not currently working in design"
+      ]
+    },
+    {
+      "question": "9-Time at co?",
+      "answer": "number"
+    },
+    {
+      "question": "9.1-Happiness?",
+      "answer": [
+        ":)",
+        ":|",
+        ":("
+      ]
+    },
+    {
+      "question": "10-How hired?",
+      "answer": [
+        "Self-employed",
+        "Friends",
+        "Past coworker",
+        "Job listing",
+        "Recruitor",
+        "Word-of-mouth",
+        "Other"
+      ]
+    },
+    {
+      "question": "11-Portfolio type?",
+      "answer": [
+        "Print",
+        "PDF",
+        "Website",
+        "WIP",
+        "Other",
+        "No"
+      ]
+    },
+    {
+      "question": "12-Job stability?",
+      "answer": "number"
+    },
+    {
+      "question": "13-Visible career path?",
+      "answer": "number"
+    },
+    {
+      "question": "14-New skills?",
+      "answer": "number"
+    },
+    {
+      "question": "15-Impact?",
+      "answer": "number"
+    }
+  ]
+}

@@ -1,16 +1,32 @@
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8">
-  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+  <script src="https://d3js.org/d3-queue.v3.min.js"></script>
   <style>
     body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
   </style>
 </head>
 
 <body>
+
+    <h1>Data Tool</h1>
+
+    <select id="data-selection-1">
+    </select>
+    <select id="data-selection-2">
+    </select>
+
+    <div id="graph-area"></div>
+
   <script>
 
-    var svg = d3.select("body").append("svg")
+    var questions = undefined,
+        responses = undefined;
+
+    var svg = d3.select("#graph-area").append("svg")
       .attr("width", 960)
       .attr("height", 500)
 
@@ -20,6 +36,58 @@
       .attr("x", 120)
       .style("font-size", 36)
       .style("font-family", "monospace")
+
+    d3.queue()
+      .defer(d3.json, "data/wco-questions.json")
+      .defer(d3.csv, "data/wco-responses-export.csv")
+      .awaitAll(function(error, files) {
+        parseData(files[0], files[1]);
+      });
+
+    function parseData(iQuestions, iResponses) {
+
+      questions = iQuestions;
+      responses = iResponses;
+
+      var selectableQuestions = questions.filter(function(d){
+        if (d.type === "range") { return true; }
+        else if (d.type === "choice" && d.attributes.allow_multiple === false) { return true; }
+        else { return false; }
+      });
+
+      debugger;
+
+      setupHTML(selectableQuestions);
+      updateGraph(3, 2);
+
+    }
+
+    function setupHTML(iDropDownItems) {
+
+      iDropDownItems.forEach(function(d, i) {
+        $("#data-selection-1").append("<option>"+ d.attributes.slug +"</option>");
+        $("#data-selection-2").append("<option>"+ d.attributes.slug +"</option>");
+      });
+
+    }
+
+    function updateGraph(iQuestionNum1, iQuestionNum2) {
+
+      var x = d3.scale.linear().rangeRound([0, width]);
+      var y = d3.scale.ordinal().rangeRoundPoints([height, 0]);
+
+      var xAxis = d3.svg.axis().scale(x).orient("bottom");
+      var yAxis = d3.svg.axis().scale(y).orient("left");
+
+      var line = d3.svg.line()
+        .x(function(d) { return x(d) })
+        .y(function(d) { return y(d) });
+
+      questions.
+
+      x.domain()
+
+    }
 
   </script>
 </body>
