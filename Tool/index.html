@@ -41,8 +41,10 @@
     <h1>Data Tool</h1>
 
     <select id="data-selection-1">
+      <option selected disabled>Select question for X axis</option>
     </select>
     <select id="data-selection-2">
+      <option selected disabled>Select question for Y axis</option>
     </select>
 
     <div id="graph-area"></div>
@@ -80,6 +82,7 @@
       });
 
 // debugger;
+console.log('responses', responses)
 
       setupHTML(selectableQuestions);
       updateGraph(2, 3);
@@ -89,13 +92,23 @@
     function setupHTML(iDropDownItems) {
 
       iDropDownItems.forEach(function(d, i) {
-        $("#data-selection-1").append("<option>"+ d.attributes.slug +"</option>");
-        $("#data-selection-2").append("<option>"+ d.attributes.slug +"</option>");
+        $('#data-selection-1').append('<option data-question-id='+ d.question +'>'+ d.attributes.slug +'</option>');
+        $('#data-selection-2').append('<option data-question-id='+ d.question +'>'+ d.attributes.slug +'</option>');
+      });
+
+      $("select").change(function() {
+        var qId1 = $('#data-selection-1 option:selected').data('question-id');
+        var qId2 = $('#data-selection-2 option:selected').data('question-id');
+        if (qId1 !== undefined && qId2 !== undefined) {
+          updateGraph(qId1, qId2);
+        }
       });
 
     }
 
     function updateGraph(iQuestionNum1, iQuestionNum2) {
+
+console.log('- updateGraph('+iQuestionNum1+', '+iQuestionNum2+')')
 
       // Part 1: prepare data
 
@@ -107,6 +120,7 @@
       var domainQ2 = getQuestionDomain(iQuestionNum2);
 
 // debugger;
+console.log('responseData', responseData)
 
       // Part 2: create chart vars
 
@@ -189,14 +203,14 @@
 
           // X
           if (Number(question.split('-')[0]) === Number(iQuestionNum1)) {
-            if (responseVal !== '' || responseVal !== undefined) {
+            if (responseVal !== '' && responseVal !== undefined) {
               if (q1Type === 'range') { responseVal = Number(responseVal); }
               curResult.x = responseVal;
             }
           }
           // Y
           if (Number(question.split('-')[0]) === Number(iQuestionNum2)) {
-            if (responseVal !== '' || responseVal !== undefined) {
+            if (responseVal !== '' && responseVal !== undefined) {
               if (q2Type === 'range') { responseVal = Number(responseVal); }
               curResult.y = responseVal;
             }
