@@ -53,7 +53,7 @@
 
     var questions = undefined,
         responses = undefined,
-        margin = {top: 20, right: 20, bottom:80, left: 300},
+        margin = {top: 20, right: 20, bottom: 80, left: 300},
         width = 960 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
@@ -106,6 +106,7 @@ console.log('responses', responses)
 
     }
 
+    // NB: iQuestionNum1 is for X scale, iQuestionNum2 is for Y scale.
     function updateGraph(iQuestionNum1, iQuestionNum2) {
 
 console.log('- updateGraph('+iQuestionNum1+', '+iQuestionNum2+')')
@@ -124,8 +125,29 @@ console.log('responseData', responseData)
 
       // Part 2: create chart vars
 
-      var xScale = d3.scale.linear().rangeRound([0, width]).domain(domainQ1);
-      var yScale = d3.scale.ordinal().rangeRoundPoints([height, 0]).domain(domainQ2);
+      var xScale, yScale;
+      switch (curQuestion1.type) {
+        case 'range':
+          xScale = d3.scale.linear().rangeRound([0, width]);
+          break;
+        case 'choice':
+          xScale = d3.scale.ordinal().rangeRoundPoints([0, width]);
+          break;
+        default:
+          console.error("Unable to choose proper d3.scale for the Question 1's type.")
+      }
+      switch (curQuestion2.type) {
+        case 'range':
+          yScale = d3.scale.linear().rangeRound([height, 0]);
+          break;
+        case 'choice':
+          yScale = d3.scale.ordinal().rangeRoundPoints([height, 0]);
+          break;
+        default:
+          console.error("Unable to choose proper d3.scale for the Question 2's type.")
+      }
+      xScale.domain(domainQ1);
+      yScale.domain(domainQ2);
 
       var xAxis = d3.svg.axis().scale(xScale).orient('bottom');
       var yAxis = d3.svg.axis().scale(yScale).orient('left');
