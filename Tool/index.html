@@ -55,7 +55,7 @@
         else { return false; }
       });
 
-      debugger;
+debugger;
 
       setupHTML(selectableQuestions);
       updateGraph(3, 2);
@@ -71,21 +71,80 @@
 
     }
 
+    //"range" means numbers!
     function updateGraph(iQuestionNum1, iQuestionNum2) {
+
+      // Get data for provided questions.
+      var curQuestion1 = _.find(questions, {'question': iQuestionNum1});
+      var curQuestion2 = _.find(questions, {'question': iQuestionNum2});
+      var responseData = getResponseData(iQuestionNum1, iQuestionNum2);
+      var domainQ1 = getQuestionDomain(iQuestionNum1);
+      var domainQ2 = getQuestionDomain(iQuestionNum2);
+
+debugger;
 
       var x = d3.scale.linear().rangeRound([0, width]);
       var y = d3.scale.ordinal().rangeRoundPoints([height, 0]);
 
-      var xAxis = d3.svg.axis().scale(x).orient("bottom");
-      var yAxis = d3.svg.axis().scale(y).orient("left");
+      var xAxis = d3.svg.axis().scale(x).orient('bottom');
+      var yAxis = d3.svg.axis().scale(y).orient('left');
 
-      var line = d3.svg.line()
-        .x(function(d) { return x(d) })
-        .y(function(d) { return y(d) });
+    }
 
-      questions.
+    function getQuestionDomain(iQuestionNum) {
 
-      x.domain()
+      var result = [];
+
+      var curQuestion = _.find(questions, {'question': iQuestionNum});
+      if (curQuestion.type === 'choice') {
+        result = _.map(curQuestion.attributes.question_choice_options, 'title');
+      } else if (curQuestion.type === 'range') {
+        result = [curQuestion.attributes.min, curQuestion.attributes.max];
+      }
+
+      return result;
+
+    }
+
+    // For each response, combine answers to Q1 and Q2 into an array of response pairs.
+    // Ex: [{response1answer1,response1answer2}, {response2answer1,response2answer2}, ...]
+    function getResponseData(iQuestionNum1, iQuestionNum2) {
+
+      var result = [];
+      var q1Type = _.find(questions, {'question': iQuestionNum1}).type;
+      var q2Type = _.find(questions, {'question': iQuestionNum2}).type;
+
+      _.forEach(responses, function(response) {
+
+        var curResult = {};
+
+        _.forOwn(response, function(responseVal, question){
+
+          // X
+          if (Number(question.split('-')[0]) === Number(iQuestionNum1)) {
+            if (responseVal !== '' || responseVal !== undefined) {
+              if (q1Type === 'range') { responseVal = Number(responseVal); }
+              curResult.x = responseVal;
+            }
+          }
+          // Y
+          if (Number(question.split('-')[0]) === Number(iQuestionNum2)) {
+            if (responseVal !== '' || responseVal !== undefined) {
+              if (q2Type === 'range') { responseVal = Number(responseVal); }
+              curResult.y = responseVal;
+            }
+          }
+
+        });
+
+        // Check if result has X and Y before pushing.
+        if (curResult.x !== undefined && curResult.y !== undefined) {
+          result.push(curResult);
+        }
+
+      });
+
+      return result;
 
     }
 
