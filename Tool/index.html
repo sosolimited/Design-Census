@@ -53,9 +53,9 @@
 
     var questions = undefined,
         responses = undefined,
-        margin = {top: 20, right: 20, bottom: 80, left: 300},
+        margin = {top: 20, right: 20, bottom: 300, left: 300},
         width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+        height = 700 - margin.top - margin.bottom;
 
     var svg = d3.select("#graph-area").append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -159,13 +159,25 @@ console.log('responseData', responseData)
       svg.append('g')
           .attr('class', 'x axis')
           .attr('transform', 'translate(0,'+ height +')')
-          .call(xAxis)
+          .call(xAxis).call(tickRotator)
         .append('text')
           .attr('class', 'label')
           .attr('x', width)
           .attr('y', -6)
           .style('text-anchor', 'end')
           .text(curQuestion1.attributes.slug);
+      // Rotate X-axis ticks if ticks are text (and not numbers).
+      function tickRotator() {
+        console.log(d3.selectAll('.tick'))
+        if (curQuestion1.type === 'choice') {
+          d3.selectAll('.tick').select('text')
+            .attr('x', '-1rem')
+            .attr('y', '.25rem')
+            .attr('dy', '0rem')
+            .style('text-anchor', 'end')
+            .attr('transform', 'rotate(-90)');
+        }
+      }
 
       svg.append('g')
           .attr('class', 'y axis')
