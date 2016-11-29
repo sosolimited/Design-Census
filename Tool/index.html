@@ -18,6 +18,17 @@
       background-color: white;
     }
 
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .dot {
+      stroke: #000;
+    }
+
     .label {
       font-size: 0.5rem;
     }
@@ -49,13 +60,6 @@
         .attr("height", height + margin.top + margin.bottom)
       .append('g')
         .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
-
-    // svg.append("text")
-    //   .text("Edit the code below to change me!")
-    //   .attr("y", 200)
-    //   .attr("x", 120)
-    //   .style("font-size", 36)
-    //   .style("font-family", "monospace")
 
     d3.queue()
       .defer(d3.json, "data/wco-questions.json")
