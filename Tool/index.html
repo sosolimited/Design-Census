@@ -6,7 +6,22 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
   <script src="https://d3js.org/d3-queue.v3.min.js"></script>
   <style>
-    body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
+
+    html {
+      font-size: 62.5%;     /* Brings it to 10px, since default is usually 16px. */
+    }
+
+    body {
+      font-family: sans-serif;
+      font-size: 1rem;
+      color: black;
+      background-color: white;
+    }
+
+    .label {
+      font-size: 0.5rem;
+    }
+
   </style>
 </head>
 
@@ -24,18 +39,23 @@
   <script>
 
     var questions = undefined,
-        responses = undefined;
+        responses = undefined,
+        margin = {top: 20, right: 20, bottom:80, left: 300},
+        width = 960 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
 
     var svg = d3.select("#graph-area").append("svg")
-      .attr("width", 960)
-      .attr("height", 500)
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append('g')
+        .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
 
-    svg.append("text")
-      .text("Edit the code below to change me!")
-      .attr("y", 200)
-      .attr("x", 120)
-      .style("font-size", 36)
-      .style("font-family", "monospace")
+    // svg.append("text")
+    //   .text("Edit the code below to change me!")
+    //   .attr("y", 200)
+    //   .attr("x", 120)
+    //   .style("font-size", 36)
+    //   .style("font-family", "monospace")
 
     d3.queue()
       .defer(d3.json, "data/wco-questions.json")
@@ -55,10 +75,10 @@
         else { return false; }
       });
 
-debugger;
+// debugger;
 
       setupHTML(selectableQuestions);
-      updateGraph(3, 2);
+      updateGraph(2, 3);
 
     }
 
@@ -71,8 +91,9 @@ debugger;
 
     }
 
-    //"range" means numbers!
     function updateGraph(iQuestionNum1, iQuestionNum2) {
+
+      // Part 1: prepare data
 
       // Get data for provided questions.
       var curQuestion1 = _.find(questions, {'question': iQuestionNum1});
@@ -81,16 +102,58 @@ debugger;
       var domainQ1 = getQuestionDomain(iQuestionNum1);
       var domainQ2 = getQuestionDomain(iQuestionNum2);
 
-debugger;
+// debugger;
 
-      var x = d3.scale.linear().rangeRound([0, width]);
-      var y = d3.scale.ordinal().rangeRoundPoints([height, 0]);
+      // Part 2: create chart vars
 
-      var xAxis = d3.svg.axis().scale(x).orient('bottom');
-      var yAxis = d3.svg.axis().scale(y).orient('left');
+      var xScale = d3.scale.linear().rangeRound([0, width]).domain(domainQ1);
+      var yScale = d3.scale.ordinal().rangeRoundPoints([height, 0]).domain(domainQ2);
+
+      var xAxis = d3.svg.axis().scale(xScale).orient('bottom');
+      var yAxis = d3.svg.axis().scale(yScale).orient('left');
+
+      // Part 3: draw chart items
+
+      $(svg.node()).empty();
+
+      svg.append('g')
+          .attr('class', 'x axis')
+          .attr('transform', 'translate(0,'+ height +')')
+          .call(xAxis)
+        .append('text')
+          .attr('class', 'label')
+          .attr('x', width)
+          .attr('y', -6)
+          .style('text-anchor', 'end')
+          .text(curQuestion1.attributes.slug);
+
+      svg.append('g')
+          .attr('class', 'y axis')
+          .call(yAxis)
+        .append('text')
+          .attr('class', 'label')
+          .attr('transform', 'rotate(-90)')
+          .attr('y', 6)
+          .attr('dy', '.71em')
+          .style('text-anchor', 'end')
+          .text(curQuestion2.attributes.slug);
+
+      svg.selectAll('.dot')
+          .data(responseData)
+        .enter().append('circle')
+          .attr('class', 'dot')
+          .attr('r', 3.5)
+          .attr('cx', function(d){ return xScale(d.x); })
+          .attr('cy', function(d){ return yScale(d.y); })
+          .style('fill', 'red');
+
+
 
     }
 
+    // Data notes:
+    // - question.type = "range"    -->   data is NUMBERS
+    // - question.type = "choice"   -->   data is STRINGS
     function getQuestionDomain(iQuestionNum) {
 
       var result = [];
