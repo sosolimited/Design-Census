@@ -64,7 +64,7 @@
         .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
 
     d3.queue()
-      .defer(d3.json, "data/wco-questions.json")
+      .defer(d3.json, "data/wco-questions-29nov2016.json")
       .defer(d3.csv, "data/wco-responses-29nov2016.csv")
       .awaitAll(function(error, files) {
         parseData(files[0], files[1]);
@@ -168,7 +168,6 @@ console.log('responseData', responseData)
           .text(curQuestion1.attributes.slug);
       // Rotate X-axis ticks if ticks are text (and not numbers).
       function tickRotator() {
-        console.log(d3.selectAll('.tick'))
         if (curQuestion1.type === 'choice') {
           d3.selectAll('.tick').select('text')
             .attr('x', '-1rem')
