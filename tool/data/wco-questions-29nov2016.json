@@ -17,9 +17,9 @@
       "long_title": "<p>How many years have you been practicing design professionally?\u00a0</p>", 
       "min": 0, 
       "max": 100, 
-      "units_title": null, 
+      "units_title": "YEARS", 
       "units_type": 0, 
-      "enable_plus": false
+      "enable_plus": true
     }
   }, 
   {
@@ -145,9 +145,9 @@
       "long_title": "<p><span id=\"docs-internal-guid-01d9b1a0-95e7-8912-6529-73b55101840a\"><span>How many employees work at your organization?</span></span></p>", 
       "min": 0, 
       "max": 1000, 
-      "units_title": "", 
+      "units_title": "EMPLOYEES", 
       "units_type": 0, 
-      "enable_plus": false
+      "enable_plus": true
     }
   }, 
   {
@@ -567,9 +567,9 @@
       "long_title": "<p>How many years have you been with your current organization?</p>", 
       "min": 0, 
       "max": 50, 
-      "units_title": null, 
+      "units_title": "YEARS", 
       "units_type": 0, 
-      "enable_plus": false
+      "enable_plus": true
     }
   }, 
   {
@@ -756,9 +756,9 @@
       "long_title": "<p>What is your annual salary (in thousands)?</p>", 
       "min": 0, 
       "max": 500, 
-      "units_title": "{local:currency}", 
+      "units_title": "{local:currency}/YEAR", 
       "units_type": 1, 
-      "enable_plus": false
+      "enable_plus": true
     }
   }, 
   {
@@ -767,17 +767,31 @@
     "attributes": {
       "slug": "salary-hourly", 
       "short_title": "What is your hourly rate?", 
-      "long_title": "", 
+      "long_title": "<p>What is your hourly rate?<br />(with 0 being not applicable)</p>", 
       "min": 0, 
       "max": 500, 
       "units_title": "{local:currency}/hr", 
       "units_type": 1, 
-      "enable_plus": false
+      "enable_plus": true
+    }
+  }, 
+  {
+    "type": "range", 
+    "question": 19, 
+    "attributes": {
+      "slug": "total-compensation", 
+      "short_title": "Total compensation", 
+      "long_title": "<p class=\"p1\"><span class=\"s1\">What is your annual total compensation, including benefits, bonuses, and other payment (in thousands)?</span></p>", 
+      "min": 0, 
+      "max": 999, 
+      "units_title": "DOLLARS", 
+      "units_type": 1, 
+      "enable_plus": true
     }
   }, 
   {
     "type": "choice", 
-    "question": 19, 
+    "question": 20, 
     "attributes": {
       "slug": "extra-sources-income", 
       "short_title": "Besides your fulltime job, do you have other sources of income?", 
@@ -814,7 +828,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 20, 
+    "question": 21, 
     "attributes": {
       "slug": "benefits", 
       "short_title": "What benefits does your organization offer?", 
@@ -935,7 +949,7 @@
   }, 
   {
     "type": "range", 
-    "question": 21, 
+    "question": 22, 
     "attributes": {
       "slug": "compensation-satisfaction", 
       "short_title": "How satisfied are you with your compensation?", 
@@ -949,21 +963,21 @@
   }, 
   {
     "type": "range", 
-    "question": 22, 
+    "question": 23, 
     "attributes": {
       "slug": "team-member-count", 
       "short_title": "How many people are on your direct team?", 
       "long_title": "<p><span id=\"docs-internal-guid-395c8283-9614-4797-d218-27f67e63fed0\"><span>How many people are on your direct team?</span></span></p>", 
       "min": 0, 
       "max": 1000, 
-      "units_title": "", 
+      "units_title": "PEOPLE", 
       "units_type": 0, 
       "enable_plus": false
     }
   }, 
   {
     "type": "range", 
-    "question": 23, 
+    "question": 24, 
     "attributes": {
       "slug": "num-report-you", 
       "short_title": "How many people report to you?", 
@@ -972,12 +986,12 @@
       "max": 1000, 
       "units_title": "", 
       "units_type": 0, 
-      "enable_plus": false
+      "enable_plus": true
     }
   }, 
   {
     "type": "yes_no", 
-    "question": 24, 
+    "question": 25, 
     "attributes": {
       "slug": "hire-freelancers", 
       "short_title": "Do you hire freelancers?", 
@@ -986,7 +1000,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 25, 
+    "question": 26, 
     "attributes": {
       "slug": "skills-to-develop", 
       "short_title": "What skills do you and your team want to learn or develop?", 
@@ -1023,7 +1037,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 26, 
+    "question": 27, 
     "attributes": {
       "slug": "daily-responsibilities", 
       "short_title": "Which responsibilities do you handle on a daily basis?", 
@@ -1084,7 +1098,7 @@
   }, 
   {
     "type": "range", 
-    "question": 27, 
+    "question": 28, 
     "attributes": {
       "slug": "percent-enjoyable", 
       "short_title": "What percentage of time do you spend making enjoyable things?", 
@@ -1098,7 +1112,7 @@
   }, 
   {
     "type": "range", 
-    "question": 28, 
+    "question": 29, 
     "attributes": {
       "slug": "life-work-balance", 
       "short_title": "Are you able to balance work with your desired lifestyle?", 
@@ -1112,7 +1126,7 @@
   }, 
   {
     "type": "composite", 
-    "question": 29, 
+    "question": 30, 
     "attributes": {
       "slug": "weekly-hours-composite", 
       "short_title": "How many hours do you work each week?", 
@@ -1121,21 +1135,21 @@
   }, 
   {
     "type": "range", 
-    "question": 29.1, 
+    "question": 30.1, 
     "attributes": {
       "slug": "weekly-hours", 
       "short_title": "How many hours do you work each week?", 
       "long_title": "<p><span id=\"docs-internal-guid-f35723ed-4494-19c0-a6a6-8b890e633361\"><span>How many hours do you work during a typical week? </span></span></p>", 
       "min": 0, 
       "max": 80, 
-      "units_title": "", 
+      "units_title": "HOURS", 
       "units_type": 0, 
-      "enable_plus": false
+      "enable_plus": true
     }
   }, 
   {
     "type": "feedback", 
-    "question": 29.2, 
+    "question": 30.2, 
     "attributes": {
       "slug": "weekly-hours-feedback", 
       "short_title": "How do you feel about that?", 
@@ -1144,7 +1158,7 @@
   }, 
   {
     "type": "range", 
-    "question": 30, 
+    "question": 31, 
     "attributes": {
       "slug": "level-independence", 
       "short_title": "Do you have independence in choosing projects and directing your energy?", 
@@ -1158,7 +1172,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 31, 
+    "question": 32, 
     "attributes": {
       "slug": "rushed-often", 
       "short_title": "How often are projects rushed (crunch time)?", 
@@ -1191,7 +1205,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 32, 
+    "question": 33, 
     "attributes": {
       "slug": "software-usage", 
       "short_title": "What software do you frequently use?", 
@@ -1300,7 +1314,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 33, 
+    "question": 34, 
     "attributes": {
       "slug": "workspace-type", 
       "short_title": "What type of workspace do you have?", 
@@ -1341,7 +1355,7 @@
   }, 
   {
     "type": "text", 
-    "question": 34, 
+    "question": 35, 
     "attributes": {
       "slug": "music-choice", 
       "short_title": "What are you listening to right now?", 
@@ -1354,7 +1368,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 35, 
+    "question": 36, 
     "attributes": {
       "slug": "highest-level-education", 
       "short_title": "What is the highest level of education you have completed?", 
@@ -1395,7 +1409,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 36, 
+    "question": 37, 
     "attributes": {
       "slug": "how-received-education", 
       "short_title": "How did you receive your design education?", 
@@ -1432,7 +1446,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 37, 
+    "question": 38, 
     "attributes": {
       "slug": "learning-preference", 
       "short_title": "How do you prefer to learn new design skills?", 
@@ -1477,7 +1491,7 @@
   }, 
   {
     "type": "composite", 
-    "question": 38, 
+    "question": 39, 
     "attributes": {
       "slug": "commute-composite", 
       "short_title": "How long is your commute?", 
@@ -1486,7 +1500,7 @@
   }, 
   {
     "type": "range", 
-    "question": 38.1, 
+    "question": 39.1, 
     "attributes": {
       "slug": "commute-time", 
       "short_title": "How long is your commute?", 
@@ -1495,12 +1509,12 @@
       "max": 120, 
       "units_title": "Minutes", 
       "units_type": 0, 
-      "enable_plus": false
+      "enable_plus": true
     }
   }, 
   {
     "type": "feedback", 
-    "question": 38.2, 
+    "question": 39.2, 
     "attributes": {
       "slug": "commute-feedback", 
       "short_title": "How do you feel about that?", 
@@ -1509,21 +1523,21 @@
   }, 
   {
     "type": "range", 
-    "question": 39, 
+    "question": 40, 
     "attributes": {
       "slug": "age", 
       "short_title": "What is your age?", 
       "long_title": "<p><span id=\"docs-internal-guid-395c8283-9621-1be7-3c2f-4ee026a4a9e3\"><span>What is your age?</span></span></p>", 
       "min": 0, 
       "max": 100, 
-      "units_title": null, 
+      "units_title": "YEARS", 
       "units_type": 0, 
-      "enable_plus": false
+      "enable_plus": true
     }
   }, 
   {
     "type": "choice", 
-    "question": 40, 
+    "question": 41, 
     "attributes": {
       "slug": "gender", 
       "short_title": "What is your gender? ", 
@@ -1552,7 +1566,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 41, 
+    "question": 42, 
     "attributes": {
       "slug": "ethnicity", 
       "short_title": "What is your ethnicity?", 
@@ -1561,6 +1575,10 @@
         {
           "title": "Other", 
           "allow_text": true
+        }, 
+        {
+          "title": "Prefer not to answer", 
+          "allow_text": false
         }, 
         {
           "title": "White", 
@@ -1587,8 +1605,8 @@
           "allow_text": false
         }, 
         {
-          "title": "Prefer not to answer", 
-          "allow_text": false
+          "title": "Other", 
+          "allow_text": true
         }
       ], 
       "allow_multiple": true, 
@@ -1597,7 +1615,7 @@
   }, 
   {
     "type": "range", 
-    "question": 42, 
+    "question": 43, 
     "attributes": {
       "slug": "languages-spoken", 
       "short_title": "How many languages do you speak? ", 
@@ -1606,12 +1624,12 @@
       "max": 10, 
       "units_title": "", 
       "units_type": 0, 
-      "enable_plus": false
+      "enable_plus": true
     }
   }, 
   {
     "type": "choice", 
-    "question": 43, 
+    "question": 44, 
     "attributes": {
       "slug": "languages-at-work", 
       "short_title": "Which languages do you use at work?", 
@@ -1784,7 +1802,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 44, 
+    "question": 45, 
     "attributes": {
       "slug": "sexual-orientation", 
       "short_title": "What is your sexual orientation? ", 
@@ -1817,7 +1835,7 @@
   }, 
   {
     "type": "yes_no", 
-    "question": 45, 
+    "question": 46, 
     "attributes": {
       "slug": "have-children", 
       "short_title": "Do you have any children?", 
@@ -1826,7 +1844,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 46, 
+    "question": 47, 
     "attributes": {
       "slug": "have-pets", 
       "short_title": "Do you have any pets?", 
@@ -1867,7 +1885,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 47, 
+    "question": 48, 
     "attributes": {
       "slug": "num-coffee-daily", 
       "short_title": "How many cups of coffee do you drink daily?", 
@@ -1904,7 +1922,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 48, 
+    "question": 49, 
     "attributes": {
       "slug": "design-communities", 
       "short_title": "What design communities do you participate in?", 
@@ -1912,6 +1930,10 @@
       "question_choice_options": [
         {
           "title": "AIGA", 
+          "allow_text": false
+        }, 
+        {
+          "title": "AGI", 
           "allow_text": false
         }, 
         {
@@ -1965,10 +1987,6 @@
         {
           "title": "None", 
           "allow_text": false
-        }, 
-        {
-          "title": "AGI", 
-          "allow_text": false
         }
       ], 
       "allow_multiple": true, 
@@ -1977,7 +1995,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 49, 
+    "question": 50, 
     "attributes": {
       "slug": "design-conferences", 
       "short_title": "Which design conferences do you attend?", 
@@ -1996,7 +2014,7 @@
           "allow_text": false
         }, 
         {
-          "title": "AIGA", 
+          "title": "AIGA Design Conference", 
           "allow_text": false
         }, 
         {
@@ -2114,7 +2132,7 @@
   }, 
   {
     "type": "choice", 
-    "question": 50, 
+    "question": 51, 
     "attributes": {
       "slug": "social-media", 
       "short_title": "What social media do you participate in?", 
@@ -2141,10 +2159,6 @@
           "allow_text": false
         }, 
         {
-          "title": "Vine", 
-          "allow_text": false
-        }, 
-        {
           "title": "YouTube", 
           "allow_text": false
         }, 
@@ -2167,7 +2181,7 @@
   }, 
   {
     "type": "link_upload", 
-    "question": 51, 
+    "question": 52, 
     "attributes": {
       "slug": "best-thing-you-year", 
       "short_title": "What is the best thing you made this year?", 
@@ -2176,7 +2190,7 @@
   }, 
   {
     "type": "link_upload", 
-    "question": 52, 
+    "question": 53, 
     "attributes": {
       "slug": "best-thing-else-year", 
       "short_title": "What is the best thing someone else made this year?", 
@@ -2185,7 +2199,7 @@
   }, 
   {
     "type": "text", 
-    "question": 53, 
+    "question": 54, 
     "attributes": {
       "slug": "design-joke", 
       "short_title": "Tell us a design joke", 
@@ -2198,7 +2212,7 @@
   }, 
   {
     "type": "text", 
-    "question": 54, 
+    "question": 55, 
     "attributes": {
       "slug": "future-three-words", 
       "short_title": "Summarize the future of design in three words:", 
