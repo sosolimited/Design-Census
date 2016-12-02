@@ -55,7 +55,7 @@
         responses = undefined,
         margin = {top: 20, right: 20, bottom: 300, left: 300},
         width = 960 - margin.left - margin.right,
-        height = 700 - margin.top - margin.bottom;
+        height = 960 - margin.top - margin.bottom;
 
     var svg = d3.select("#graph-area").append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -64,8 +64,8 @@
         .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
 
     d3.queue()
-      .defer(d3.json, "data/wco-questions-29nov2016.json")
-      .defer(d3.csv, "data/wco-responses-29nov2016.csv")
+      .defer(d3.json, "data/wco-questions-2dec2016.json")
+      .defer(d3.csv, "data/wco-responses-2dec2016.csv")
       .awaitAll(function(error, files) {
         parseData(files[0], files[1]);
       });
