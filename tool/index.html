@@ -63,12 +63,18 @@
       .append('g')
         .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
 
-    d3.queue()
-      .defer(d3.json, "data/wco-questions-2dec2016.json")
-      .defer(d3.csv, "data/wco-responses-2dec2016.csv")
-      .awaitAll(function(error, files) {
-        parseData(files[0], files[1]);
+    // Load CSV first to remove empty rows from it, then load JSON.
+    d3.xhr('data/wco-responses-2dec2016.csv').get(function (err, response) {
+
+      var dirtyCSV = response.responseText;
+      var cleanCSV = dirtyCSV.split('\n\r').join('');
+      var parsedCSV = d3.csv.parse(cleanCSV);
+
+      d3.json("data/wco-questions-2dec2016.json", function(error, json) {
+        parseData(json, parsedCSV);
       });
+
+    });
 
     function parseData(iQuestions, iResponses) {
 
@@ -82,7 +88,8 @@
       });
 
 // debugger;
-console.log('responses', responses)
+console.log('Raw questions', questions)
+console.log('Raw responses', responses)
 
       setupHTML(selectableQuestions);
       updateGraph(2, 3);
@@ -109,7 +116,7 @@ console.log('responses', responses)
     // NB: iQuestionNum1 is for X scale, iQuestionNum2 is for Y scale.
     function updateGraph(iQuestionNum1, iQuestionNum2) {
 
-console.log('- updateGraph('+iQuestionNum1+', '+iQuestionNum2+')')
+console.log('-updateGraph('+iQuestionNum1+', '+iQuestionNum2+')')
 
       // Part 1: prepare data
 
@@ -121,7 +128,7 @@ console.log('- updateGraph('+iQuestionNum1+', '+iQuestionNum2+')')
       var domainQ2 = getQuestionDomain(iQuestionNum2);
 
 // debugger;
-console.log('responseData', responseData)
+console.log('-updateGraph -responseData', responseData)
 
       // Part 2: create chart vars
 
@@ -198,8 +205,6 @@ console.log('responseData', responseData)
           .attr('cy', function(d){ return yScale(d.y); })
           .style('fill', 'red');
 
-
-
     }
 
     // Data notes:
@@ -225,10 +230,20 @@ console.log('responseData', responseData)
     function getResponseData(iQuestionNum1, iQuestionNum2) {
 
       var result = [];
-      var q1Type = _.find(questions, {'question': iQuestionNum1}).type;
-      var q2Type = _.find(questions, {'question': iQuestionNum2}).type;
+      var q1 = _.find(questions, {'question': iQuestionNum1});
+      var q2 = _.find(questions, {'question': iQuestionNum2});
+      var q1Type = q1.type;
+      var q2Type = q2.type;
+      var q1Attr = {
+        "enable_plus": q1.attributes.enable_plus || false
+      };
+      var q2Attr = {
+        "enable_plus": q2.attributes.enable_plus || false
+      };
 
       _.forEach(responses, function(response) {
+
+// debugger;
 
         var curResult = {};
 
@@ -237,14 +252,18 @@ console.log('responseData', responseData)
           // X
           if (Number(question.split('-')[0]) === Number(iQuestionNum1)) {
             if (responseVal !== '' && responseVal !== undefined) {
-              if (q1Type === 'range') { responseVal = Number(responseVal); }
+              if (q1Type === 'range') {
+                responseVal = formatRangeValue(responseVal, q1Attr);
+              }
               curResult.x = responseVal;
             }
           }
           // Y
           if (Number(question.split('-')[0]) === Number(iQuestionNum2)) {
             if (responseVal !== '' && responseVal !== undefined) {
-              if (q2Type === 'range') { responseVal = Number(responseVal); }
+              if (q2Type === 'range') {
+                responseVal = formatRangeValue(responseVal, q2Attr);
+              }
               curResult.y = responseVal;
             }
           }
@@ -257,6 +276,24 @@ console.log('responseData', responseData)
         }
 
       });
+
+      return result;
+
+    }
+
+    function formatRangeValue(iValue, iQuestionAttributes) {
+
+      var result = iValue;
+
+      // Remove '+' symbol from some range values like '120+'
+      if (iQuestionAttributes.enable_plus) {
+        if (typeof result === 'string') {
+          if (result.indexOf('+') > -1) {
+            result = result.slice(0, -1);
+          }
+        }
+      }
+      result = Number(result);
 
       return result;
 
