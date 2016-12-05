@@ -64,7 +64,7 @@
         .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
 
     // Load CSV first to remove empty rows from it, then load JSON.
-    d3.xhr('data/wco-responses-2dec2016.csv').get(function (err, response) {
+    d3.xhr('data/wco-responses-5dec2016.csv').get(function (err, response) {
 
       var dirtyCSV = response.responseText;
       var cleanCSV = dirtyCSV.split('\n\r').join('');
