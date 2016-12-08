@@ -26,6 +26,7 @@
     }
 
     .dot {
+      stroke-width: 0.5px;
       stroke: #000;
     }
 
@@ -53,7 +54,7 @@
 
     var questions = undefined,
         responses = undefined,
-        margin = {top: 20, right: 20, bottom: 300, left: 300},
+        margin = {top: 50, right: 50, bottom: 300, left: 300},
         width = 960 - margin.left - margin.right,
         height = 960 - margin.top - margin.bottom;
 
@@ -123,16 +124,20 @@ console.log('-updateGraph('+iQuestionNum1+', '+iQuestionNum2+')')
       // Get data for provided questions.
       var curQuestion1 = _.find(questions, {'question': iQuestionNum1});
       var curQuestion2 = _.find(questions, {'question': iQuestionNum2});
-      var responseData = getResponseData(iQuestionNum1, iQuestionNum2);
+      var responseData = getResponseDataV2(iQuestionNum1, iQuestionNum2);
       var domainQ1 = getQuestionDomain(iQuestionNum1);
       var domainQ2 = getQuestionDomain(iQuestionNum2);
+      var domainRadius = [0, (_.maxBy(responseData, 'count').count + 0.5)];
+      var rangeRadius = [1.5, 40.5];
+
+console.log("domainRadius", domainRadius)
 
 // debugger;
 console.log('-updateGraph -responseData', responseData)
 
       // Part 2: create chart vars
 
-      var xScale, yScale;
+      var xScale, yScale, radiusScale;
       switch (curQuestion1.type) {
         case 'range':
           xScale = d3.scale.linear().rangeRound([0, width]);
@@ -155,6 +160,7 @@ console.log('-updateGraph -responseData', responseData)
       }
       xScale.domain(domainQ1);
       yScale.domain(domainQ2);
+      radiusScale = d3.scale.linear().range(rangeRadius).domain(domainRadius);
 
       var xAxis = d3.svg.axis().scale(xScale).orient('bottom');
       var yAxis = d3.svg.axis().scale(yScale).orient('left');
@@ -200,10 +206,11 @@ console.log('-updateGraph -responseData', responseData)
           .data(responseData)
         .enter().append('circle')
           .attr('class', 'dot')
-          .attr('r', 3.5)
+          .attr('r', function(d){ return radiusScale(d.count); })
           .attr('cx', function(d){ return xScale(d.x); })
           .attr('cy', function(d){ return yScale(d.y); })
-          .style('fill', 'red');
+          .style('fill', 'red')
+          .attr('fill-opacity', 0.2);
 
     }
 
@@ -225,9 +232,75 @@ console.log('-updateGraph -responseData', responseData)
 
     }
 
+    // ?
+    function getResponseDataV2(iQuestionNum1, iQuestionNum2) {
+
+      var result = [];
+      var resultP1 = [];
+      var q1 = _.find(questions, {'question': iQuestionNum1});
+      var q2 = _.find(questions, {'question': iQuestionNum2});
+      var q1Type = q1.type;
+      var q2Type = q2.type;
+      var q1Attr = {
+        "enable_plus": q1.attributes.enable_plus || false
+      };
+      var q2Attr = {
+        "enable_plus": q2.attributes.enable_plus || false
+      };
+
+      _.forEach(responses, function(response) {
+
+// debugger;
+
+        var curResult = {};
+
+        _.forOwn(response, function(responseVal, question) {
+
+          // X
+          if (Number(question.split('-')[0]) === Number(iQuestionNum1)) {
+            if (responseVal !== '' && responseVal !== undefined) {
+              if (q1Type === 'range') {
+                responseVal = formatRangeValue(responseVal, q1Attr);
+              }
+              curResult.x = responseVal;
+            }
+          }
+          // Y
+          if (Number(question.split('-')[0]) === Number(iQuestionNum2)) {
+            if (responseVal !== '' && responseVal !== undefined) {
+              if (q2Type === 'range') {
+                responseVal = formatRangeValue(responseVal, q2Attr);
+              }
+              curResult.y = responseVal;
+            }
+          }
+
+        });
+
+        // Check if result has X and Y before pushing.
+        if (curResult.x !== undefined && curResult.y !== undefined) {
+          resultP1.push(curResult);
+        }
+
+      });
+
+      ////////////////////////////////////////////////////////////////////////
+
+      var resultP2 = _.uniqWith(resultP1, _.isEqual);
+      _.forEach(resultP2, function(d, i) {
+        var numDuplicates = _.filter(resultP1, _.matches(d)).length;
+        d.count = numDuplicates;
+      });
+
+      result = resultP2;
+
+      return result;
+
+    }
+
     // For each response, combine answers to Q1 and Q2 into an array of response pairs.
     // Ex: [{response1answer1,response1answer2}, {response2answer1,response2answer2}, ...]
-    function getResponseData(iQuestionNum1, iQuestionNum2) {
+    function getResponseDataV1(iQuestionNum1, iQuestionNum2) {
 
       var result = [];
       var q1 = _.find(questions, {'question': iQuestionNum1});
