@@ -54,7 +54,9 @@
 
     var questions = undefined,
         responses = undefined,
+        // Margins around graph.
         margin = {top: 50, right: 50, bottom: 300, left: 300},
+        // Width & height of graph.
         width = 960 - margin.left - margin.right,
         height = 960 - margin.top - margin.bottom;
 
@@ -92,7 +94,9 @@
 console.log('Raw questions', questions)
 console.log('Raw responses', responses)
 
+      // Initially setup HTML elements.
       setupHTML(selectableQuestions);
+      // Draws the first graph on page load.
       updateGraph(2, 3);
 
     }
@@ -128,7 +132,7 @@ console.log('-updateGraph('+iQuestionNum1+', '+iQuestionNum2+')')
       var domainQ1 = getQuestionDomain(iQuestionNum1);
       var domainQ2 = getQuestionDomain(iQuestionNum2);
       var domainRadius = [0, (_.maxBy(responseData, 'count').count + 0.5)];
-      var rangeRadius = [1.5, 40.5];
+      var rangeRadius = [1.5, 40.5];    // min & max radius for the circles.
 
 console.log("domainRadius", domainRadius)
 
@@ -140,7 +144,7 @@ console.log('-updateGraph -responseData', responseData)
       var xScale, yScale, radiusScale;
       switch (curQuestion1.type) {
         case 'range':
-          xScale = d3.scale.linear().rangeRound([0, width]);
+          xScale = d3.scale.linear().range([0, width]);
           break;
         case 'choice':
           xScale = d3.scale.ordinal().rangeRoundPoints([0, width]);
@@ -150,7 +154,7 @@ console.log('-updateGraph -responseData', responseData)
       }
       switch (curQuestion2.type) {
         case 'range':
-          yScale = d3.scale.linear().rangeRound([height, 0]);
+          yScale = d3.scale.linear().range([height, 0]);
           break;
         case 'choice':
           yScale = d3.scale.ordinal().rangeRoundPoints([height, 0]);
@@ -202,21 +206,22 @@ console.log('-updateGraph -responseData', responseData)
           .style('text-anchor', 'end')
           .text(curQuestion2.attributes.slug);
 
+      // Draw circles
       svg.selectAll('.dot')
           .data(responseData)
         .enter().append('circle')
-          .attr('class', 'dot')
-          .attr('r', function(d){ return radiusScale(d.count); })
-          .attr('cx', function(d){ return xScale(d.x); })
-          .attr('cy', function(d){ return yScale(d.y); })
-          .style('fill', 'red')
-          .attr('fill-opacity', 0.2);
+          .attr('class', 'dot')       // add any number of CSS classes for styling
+          .attr('r', function(d){ return radiusScale(d.count); })   // radius
+          .attr('cx', function(d){ return xScale(d.x); })   // center-x position
+          .attr('cy', function(d){ return yScale(d.y); })   // center-y position
+          .style('fill', 'red')       // inject CSS directly using .style()
+          .attr('fill-opacity', 0.2); // this is an attribute, not a CSS property, but it might work in CSS too.
 
     }
 
     // Data notes:
-    // - question.type = "range"    -->   data is NUMBERS
-    // - question.type = "choice"   -->   data is STRINGS
+    // - question.type = "range"    -->   data is NUMBER
+    // - question.type = "choice"   -->   data is STRING
     function getQuestionDomain(iQuestionNum) {
 
       var result = [];
@@ -232,7 +237,7 @@ console.log('-updateGraph -responseData', responseData)
 
     }
 
-    // ?
+    // This version of the function adds data binning.
     function getResponseDataV2(iQuestionNum1, iQuestionNum2) {
 
       var result = [];
@@ -261,6 +266,8 @@ console.log('-updateGraph -responseData', responseData)
             if (responseVal !== '' && responseVal !== undefined) {
               if (q1Type === 'range') {
                 responseVal = formatRangeValue(responseVal, q1Attr);
+              } else if (q1Type === 'choice') {
+                responseVal = formatChoiceValue(responseVal);
               }
               curResult.x = responseVal;
             }
@@ -270,6 +277,8 @@ console.log('-updateGraph -responseData', responseData)
             if (responseVal !== '' && responseVal !== undefined) {
               if (q2Type === 'range') {
                 responseVal = formatRangeValue(responseVal, q2Attr);
+              } else if (q2Type === 'choice') {
+                responseVal = formatChoiceValue(responseVal);
               }
               curResult.y = responseVal;
             }
@@ -308,7 +317,7 @@ console.log('-updateGraph -responseData', responseData)
       var q1Type = q1.type;
       var q2Type = q2.type;
       var q1Attr = {
-        "enable_plus": q1.attributes.enable_plus || false
+        "enable_plus": q1.attributes.enable_plus || false       // 'enable_plus' means the max value in range can have a + (ex: '1000+') which needs to be treated.
       };
       var q2Attr = {
         "enable_plus": q2.attributes.enable_plus || false
@@ -327,6 +336,8 @@ console.log('-updateGraph -responseData', responseData)
             if (responseVal !== '' && responseVal !== undefined) {
               if (q1Type === 'range') {
                 responseVal = formatRangeValue(responseVal, q1Attr);
+              } else if (q1Type === 'choice') {
+                responseVal = formatChoiceValue(responseVal);
               }
               curResult.x = responseVal;
             }
@@ -336,6 +347,8 @@ console.log('-updateGraph -responseData', responseData)
             if (responseVal !== '' && responseVal !== undefined) {
               if (q2Type === 'range') {
                 responseVal = formatRangeValue(responseVal, q2Attr);
+              } else if (q2Type === 'choice') {
+                responseVal = formatChoiceValue(responseVal);
               }
               curResult.y = responseVal;
             }
@@ -354,6 +367,7 @@ console.log('-updateGraph -responseData', responseData)
 
     }
 
+    // Special formatting for values from question of type 'range' (typeof = number).
     function formatRangeValue(iValue, iQuestionAttributes) {
 
       var result = iValue;
@@ -367,6 +381,25 @@ console.log('-updateGraph -responseData', responseData)
         }
       }
       result = Number(result);
+
+      return result;
+
+    }
+
+    // Special formatting for values from question of type 'choice' (typeof = string).
+    function formatChoiceValue(iValue) {
+
+      var result = iValue;
+
+      if (typeof result === 'string') {
+        // For values that have attr ["allow_text": true] (like "Other" of "Prefer to self-describe") we need to remove responder's custom response and group together.
+        var customEntryMarkerIdx = result.indexOf(';');
+        if (customEntryMarkerIdx > -1) {
+          result = result.slice(0, customEntryMarkerIdx);
+        }
+      } else {
+        console.error('formatChoiceValue- iValue is not a string.')
+      }
 
       return result;
 
