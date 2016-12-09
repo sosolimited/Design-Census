@@ -171,40 +171,8 @@ console.log('-updateGraph -responseData', responseData)
 
       // Part 3: draw chart items
 
+      // Delete previous chart, start from scratch.
       $(svg.node()).empty();
-
-      svg.append('g')
-          .attr('class', 'x axis')
-          .attr('transform', 'translate(0,'+ height +')')
-          .call(xAxis).call(tickRotator)
-        .append('text')
-          .attr('class', 'label')
-          .attr('x', width)
-          .attr('y', -6)
-          .style('text-anchor', 'end')
-          .text(curQuestion1.attributes.slug);
-      // Rotate X-axis ticks if ticks are text (and not numbers).
-      function tickRotator() {
-        if (curQuestion1.type === 'choice') {
-          d3.selectAll('.tick').select('text')
-            .attr('x', '-1rem')
-            .attr('y', '.25rem')
-            .attr('dy', '0rem')
-            .style('text-anchor', 'end')
-            .attr('transform', 'rotate(-90)');
-        }
-      }
-
-      svg.append('g')
-          .attr('class', 'y axis')
-          .call(yAxis)
-        .append('text')
-          .attr('class', 'label')
-          .attr('transform', 'rotate(-90)')
-          .attr('y', 6)
-          .attr('dy', '.71em')
-          .style('text-anchor', 'end')
-          .text(curQuestion2.attributes.slug);
 
       // Draw circles
       svg.selectAll('.dot')
@@ -216,6 +184,56 @@ console.log('-updateGraph -responseData', responseData)
           .attr('cy', function(d){ return yScale(d.y); })   // center-y position
           .style('fill', 'red')       // inject CSS directly using .style()
           .attr('fill-opacity', 0.2); // this is an attribute, not a CSS property, but it might work in CSS too.
+
+      // Draw X axis
+      svg.append('g')
+          .attr('class', 'x axis')
+          .attr('transform', 'translate(0,'+ height +')')
+          .call(xAxis)
+          .call(tickRotator)
+        .append('text')
+          .attr('class', 'label')
+          .attr('x', width)
+          .attr('y', -6)
+          .style('text-anchor', 'end')
+          .text(curQuestion1.attributes.slug);
+
+      // Draw Y axis
+      svg.append('g')
+          .attr('class', 'y axis')
+          .call(yAxis)
+          .call(tickRotator)
+        .append('text')
+          .attr('class', 'label')
+          .attr('transform', 'rotate(-90)')
+          .attr('y', 6)
+          .attr('dy', '.71em')
+          .style('text-anchor', 'end')
+          .text(curQuestion2.attributes.slug);
+
+      // Rotate X-axis ticks if ticks are text (and not numbers).
+      function tickRotator(iQuestionType) {
+
+        // Move X ticks away from axis, for numbers and sideways text ticks.
+        var xTicks = d3.selectAll('.x .tick').select('text');
+        xTicks
+          .attr('x', '0.5rem')
+          .attr('y', '5rem')
+          .attr('dy', '0rem')
+          .style('text-anchor', 'end');
+        if (curQuestion1.type === 'choice') {
+          xTicks
+            .attr('x', '-5rem')
+            .attr('y', '.25rem')
+            .attr('transform', 'rotate(-90)');
+        }
+
+        // Move Y ticks aways from axis.
+        var yTicks = d3.selectAll('.y .tick').select('text');
+        yTicks
+          .attr('x', '-5rem');
+
+      }
 
     }
 
