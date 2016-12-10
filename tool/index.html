@@ -48,6 +48,10 @@
       <option selected disabled>Select question for Y axis</option>
     </select>
 
+    <br/><br/>
+
+    <div id="save-csv"><a download="aiga_data.csv" href="" target="_blank">Save CSV</a></div>
+
     <div id="graph-area"></div>
 
   <script>
@@ -58,7 +62,10 @@
         margin = {top: 50, right: 50, bottom: 300, left: 300},
         // Width & height of graph.
         width = 960 - margin.left - margin.right,
-        height = 960 - margin.top - margin.bottom;
+        height = 960 - margin.top - margin.bottom,
+        curQuestion1 = undefined,
+        curQuestion2 = undefined,
+        curResponseData = undefined;
 
     var svg = d3.select("#graph-area").append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -123,23 +130,28 @@ console.log('Raw responses', responses)
 
 console.log('-updateGraph('+iQuestionNum1+', '+iQuestionNum2+')')
 
+      ////////////////////////////////////////////////////////////
       // Part 1: prepare data
+      ////////////////////////////////////////////////////////////
 
       // Get data for provided questions.
-      var curQuestion1 = _.find(questions, {'question': iQuestionNum1});
-      var curQuestion2 = _.find(questions, {'question': iQuestionNum2});
-      var responseData = getResponseDataV2(iQuestionNum1, iQuestionNum2);
+      curQuestion1 = _.find(questions, {'question': iQuestionNum1});
+      curQuestion2 = _.find(questions, {'question': iQuestionNum2});
+      curResponseData = getResponseDataV2(iQuestionNum1, iQuestionNum2);
       var domainQ1 = getQuestionDomain(iQuestionNum1);
       var domainQ2 = getQuestionDomain(iQuestionNum2);
-      var domainRadius = [0, (_.maxBy(responseData, 'count').count + 0.5)];
+      var domainRadius = [0, (_.maxBy(curResponseData, 'count').count + 0.5)];
       var rangeRadius = [1.5, 40.5];    // min & max radius for the circles.
 
-console.log("domainRadius", domainRadius)
+      updateSaveCsvData();
 
+// console.log("domainRadius", domainRadius)
 // debugger;
-console.log('-updateGraph -responseData', responseData)
+console.log('-updateGraph -curResponseData', curResponseData)
 
+      ////////////////////////////////////////////////////////////
       // Part 2: create chart vars
+      ////////////////////////////////////////////////////////////
 
       var xScale, yScale, radiusScale;
       switch (curQuestion1.type) {
@@ -169,14 +181,16 @@ console.log('-updateGraph -responseData', responseData)
       var xAxis = d3.svg.axis().scale(xScale).orient('bottom');
       var yAxis = d3.svg.axis().scale(yScale).orient('left');
 
+      ////////////////////////////////////////////////////////////
       // Part 3: draw chart items
+      ////////////////////////////////////////////////////////////
 
       // Delete previous chart, start from scratch.
       $(svg.node()).empty();
 
       // Draw circles
       svg.selectAll('.dot')
-          .data(responseData)
+          .data(curResponseData)
         .enter().append('circle')
           .attr('class', 'dot')       // add any number of CSS classes for styling
           .attr('r', function(d){ return radiusScale(d.count); })   // radius
@@ -185,6 +199,7 @@ console.log('-updateGraph -responseData', responseData)
           .style('fill', 'red')       // inject CSS directly using .style()
           .attr('fill-opacity', 0.2); // this is an attribute, not a CSS property, but it might work in CSS too.
 
+      // Draw axes after circles, so they are layered above them.
       // Draw X axis
       svg.append('g')
           .attr('class', 'x axis')
@@ -271,6 +286,10 @@ console.log('-updateGraph -responseData', responseData)
         "enable_plus": q2.attributes.enable_plus || false
       };
 
+      ////////////////////////////////////////////////////////////
+      // Part 1: combine questions into x,y pairs.
+      ////////////////////////////////////////////////////////////
+
       _.forEach(responses, function(response) {
 
 // debugger;
@@ -311,7 +330,9 @@ console.log('-updateGraph -responseData', responseData)
 
       });
 
-      ////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////
+      // Part 2: data binning: count & combine matching x,y pairs.
+      ////////////////////////////////////////////////////////////
 
       var resultP2 = _.uniqWith(resultP1, _.isEqual);
       _.forEach(resultP2, function(d, i) {
@@ -422,6 +443,33 @@ console.log('-updateGraph -responseData', responseData)
       return result;
 
     }
+
+    function updateSaveCsvData() {
+      $("#save-csv a").attr('href', getCSV());
+    }
+
+    function getCSV(){
+
+      if (curQuestion1 != undefined &&
+          curQuestion2 != undefined &&
+          curResponseData != undefined) {
+
+        var csvQuestions = curQuestion1.attributes.slug + ", " + curQuestion2.attributes.slug + ", count";
+        var csvResponseData = curResponseData.map(function(row) {
+          return (row.x + ", " + row.y + ", " + row.count);
+        });
+
+        var csv = csvQuestions + "\n" + csvResponseData.join("\n");
+        var result = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+
+        return result;
+
+      } else {
+        console.warn("Can't export CSV since data in undefined.")
+      }
+
+    }
+
 
   </script>
 </body>
