@@ -211,7 +211,7 @@ console.log('-updateGraph('+iQuestionNum1+', '+iQuestionNum2+')')
 
       updateSaveCsvData();
 
-console.log("domainRadius", domainRadius)
+// console.log("domainRadius", domainRadius)
 // debugger;
 console.log('-updateGraph -curResponseData', curResponseData)
 
@@ -242,7 +242,8 @@ console.log('-updateGraph -curResponseData', curResponseData)
       }
       xScale.domain(domainQ1);
       yScale.domain(domainQ2);
-      radiusScale = d3.scale.linear().range(rangeRadius).domain(domainRadius);
+      // Use a square root scale to calculate proper radius for a linear area scale.
+      radiusScale = d3.scale.pow().exponent(.5).range(rangeRadius).domain(domainRadius);
 
       var xAxis = d3.svg.axis().scale(xScale).orient('bottom');
       var yAxis = d3.svg.axis().scale(yScale).orient('left');
@@ -337,12 +338,11 @@ console.log('-updateGraph -curResponseData', curResponseData)
 
       // Recreate legend (every chart has a different maximum value for the largest circle).
       $(legend.node()).empty();
+
       var legendCircleScale = radiusScale;
       // Add new value to domain, half of current max value.
       legendCircleScale.domain().splice(1, 0, Math.round(legendCircleScale.domain()[1]/2));
       var legendCircleStrokeWidth = 1;
-
-      console.log('legendCircleScale.domain()', legendCircleScale.domain())
 
       var legendCircles = legend.selectAll('circle')
           .data(legendCircleScale.domain())
