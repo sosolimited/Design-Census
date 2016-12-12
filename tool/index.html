@@ -7,6 +7,8 @@
   <script src="https://d3js.org/d3-queue.v3.min.js"></script>
   <style>
 
+    /* General styles */
+
     html {
       font-size: 62.5%;     /* Brings it to 10px, since default is usually 16px. */
     }
@@ -18,6 +20,8 @@
       background-color: white;
     }
 
+    /* Chart styles */
+
     .axis path,
     .axis line {
       fill: none;
@@ -25,13 +29,33 @@
       shape-rendering: crispEdges;
     }
 
+    .axis-label {
+      font-size: 0.5rem;
+    }
+
+    .axis .tick text {
+      font-size: 1rem;
+    }
+
     .dot {
       stroke-width: 0.5px;
       stroke: #000;
     }
 
-    .label {
-      font-size: 0.5rem;
+    /* Legend styles */
+
+    #legend .legend-title {
+      font-size: 1.2rem;
+      text-transform: uppercase;
+    }
+
+    #legend circle {
+      fill: none;
+      stroke: #000;
+    }
+
+    #legend .circle-label {
+      font-size: 1rem;
     }
 
   </style>
@@ -59,19 +83,37 @@
     var questions = undefined,
         responses = undefined,
         // Margins around graph.
-        margin = {top: 50, right: 50, bottom: 300, left: 300},
+        margin = {top: 50, right: 200, bottom: 300, left: 300},
         // Width & height of graph.
-        width = 960 - margin.left - margin.right,
+        width = 1080 - margin.left - margin.right,
         height = 960 - margin.top - margin.bottom,
         curQuestion1 = undefined,
         curQuestion2 = undefined,
         curResponseData = undefined;
 
-    var svg = d3.select("#graph-area").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+    // Create chart container group within SVG element.
+    var svg = d3.select('#graph-area').append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
       .append('g')
+        // TIP: svg groups ('g') can only be moved using transform-translate.
         .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
+
+    // Create a legend container group within SVG element also.
+    var legendLeftPadding = 80;
+    var legend = d3.select("#graph-area svg").append('g')
+        .attr('id', 'legend')
+        .attr('transform', 'translate(' + (margin.left + width + legendLeftPadding) + ',' + 0 + ')');
+    legend.append('text')
+        .attr('class', 'legend-title')
+        // Move the Legend title.
+        .attr('x', 0)
+        .attr('y', 50)
+        .text('Legend');
+    legend = legend.append('g')
+        .attr('width', (margin.right - legendLeftPadding))
+        // Move the circles in the legend.
+        .attr('transform', 'translate(0,' + 100 + ')');
 
     // Load CSV first to remove empty rows from it, then load JSON.
     d3.xhr('data/wco-responses-5dec2016.csv').get(function (err, response) {
@@ -140,17 +182,17 @@ console.log('-updateGraph('+iQuestionNum1+', '+iQuestionNum2+')')
       curResponseData = getResponseDataV2(iQuestionNum1, iQuestionNum2);
       var domainQ1 = getQuestionDomain(iQuestionNum1);
       var domainQ2 = getQuestionDomain(iQuestionNum2);
-      var domainRadius = [0, (_.maxBy(curResponseData, 'count').count + 0.5)];
+      var domainRadius = [1, (_.maxBy(curResponseData, 'count').count)];
       var rangeRadius = [1.5, 40.5];    // min & max radius for the circles.
 
       updateSaveCsvData();
 
-// console.log("domainRadius", domainRadius)
+console.log("domainRadius", domainRadius)
 // debugger;
 console.log('-updateGraph -curResponseData', curResponseData)
 
       ////////////////////////////////////////////////////////////
-      // Part 2: create chart vars
+      // Part 2: create chart variables
       ////////////////////////////////////////////////////////////
 
       var xScale, yScale, radiusScale;
@@ -205,9 +247,9 @@ console.log('-updateGraph -curResponseData', curResponseData)
           .attr('class', 'x axis')
           .attr('transform', 'translate(0,'+ height +')')
           .call(xAxis)
-          .call(tickRotator)
+          .call(tickModifier)
         .append('text')
-          .attr('class', 'label')
+          .attr('class', 'axis-label')
           .attr('x', width)
           .attr('y', -6)
           .style('text-anchor', 'end')
@@ -217,17 +259,17 @@ console.log('-updateGraph -curResponseData', curResponseData)
       svg.append('g')
           .attr('class', 'y axis')
           .call(yAxis)
-          .call(tickRotator)
+          .call(tickModifier)
         .append('text')
-          .attr('class', 'label')
+          .attr('class', 'axis-label')
           .attr('transform', 'rotate(-90)')
           .attr('y', 6)
           .attr('dy', '.71em')
           .style('text-anchor', 'end')
           .text(curQuestion2.attributes.slug);
 
-      // Rotate X-axis ticks if ticks are text (and not numbers).
-      function tickRotator(iQuestionType) {
+      // Modify default appearance of ticks on the axes.
+      function tickModifier(iQuestionType) {
 
         // Move X ticks away from axis, for numbers and sideways text ticks.
         var xTicks = d3.selectAll('.x .tick').select('text');
@@ -249,6 +291,43 @@ console.log('-updateGraph -curResponseData', curResponseData)
           .attr('x', '-5rem');
 
       }
+
+      // Recreate legend (every chart has a different maximum value for the largest circle).
+      $(legend.node()).empty();
+      var legendCircleScale = radiusScale;
+      // Add new value to domain, half of current max value.
+      legendCircleScale.domain().splice(1, 0, Math.round(legendCircleScale.domain()[1]/2));
+      var legendCircleStrokeWidth = 1;
+
+      console.log('legendCircleScale.domain()', legendCircleScale.domain())
+
+      var legendCircles = legend.selectAll('circle')
+          .data(legendCircleScale.domain())
+        .enter();
+      // Add circles in the legend
+      legendCircles.append('circle')
+          .attr('r', function(d){ return legendCircleScale(d); })   // radius
+          .attr('cx', legend.attr('width')/2)                       // center-x position
+          .attr('cy', function(d,i) {                               // center-y position
+            // Draw legend circles inside each other, like russian dolls.
+            var alignToBottom = (legendCircleScale.range()[1] * 2) - legendCircleScale(d);
+            alignToBottom -= ((legendCircleStrokeWidth+2) * (legendCircleScale.domain().length - i));
+            return alignToBottom;
+          })
+          .style('stroke-width', legendCircleStrokeWidth);
+      // Add number above each legend circle.
+      legendCircles.append('text')
+          .attr('class', 'circle-label')
+          .attr('x', legend.attr('width')/2)
+          .attr('y', function(d,i) {
+            var alignAboveCircle = (legendCircleScale.range()[1] * 2) - legendCircleScale(d);
+            alignAboveCircle -= ((legendCircleStrokeWidth+2) * (legendCircleScale.domain().length - i));
+            // Move number above each legend circle.
+            alignAboveCircle -= (legendCircleScale(d) + 6);
+            return alignAboveCircle;
+          })
+          .style('text-anchor', 'middle')
+          .text(function(d,i) { return legendCircleScale.domain()[i]; })
 
     }
 
