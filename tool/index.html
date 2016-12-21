@@ -5,139 +5,140 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
   <script src="https://d3js.org/d3-queue.v3.min.js"></script>
-  <style>
 
-    /* General styles */
+<!--   copied from bootstrap
+-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="../../favicon.ico">
 
-    html {
-      font-size: 62.5%;     /* Brings it to 10px, since default is usually 16px. Means 1.0rem = 10px */
-    }
+<title>Design Census Data Explorer</title>
 
-    body {
-      font-family: sans-serif;
-      font-size: 1rem;
-      color: black;
-      background-color: white;
-    }
+<!-- Bootstrap core CSS -->
+<link href="../../dist/css/bootstrap.css" rel="stylesheet">
 
-    /* Chart styles */
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
-    .axis path,
-    .axis line {
-      fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
-    }
+<!-- Custom styles for this template -->
+<link href="starter-template.css" rel="stylesheet">
 
-    .axis-label {
-      font-size: 0.5rem;
-    }
+<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+<script src="../../assets/js/ie-emulation-modes-warning.js"></script>
 
-    .axis .tick text {
-      font-size: 1rem;
-    }
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
 
-    .dot {
-      stroke-width: 0.05rem;
-      stroke: #000;
-    }
+      <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="style.css">
 
-    .dot.hovered {
-      stroke-width: 0.2rem;
-    }
+    </head>
 
-    /* Legend styles */
+    <body>
+     <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+       <div class="row">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://www.sosolimited.com/" style="float:left"><img class="large" style="max-width:129px;height:auto" src="assets/SOSOlogoVector@2x.png"><img class="small" style="max-width:50px;height:auto" src="assets/SOSOlogoVectorShort@2x.png"></a>
+          <li style="float:right; border-bottom: 3px solid #ffd849; list-style-type: none" class="h4">Design Census Data Explorer</li>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse" style="float:right">
+          <ul class="nav navbar-nav">
+            <li style="border-bottom: 3px solid #0f7056" class="h4"><div id="save-csv"><a download="aiga_data.csv" href="" target="_blank">Save selection to CSV</a></div></li>
+            <li style="border-bottom: 3px solid #67a5cf" class="h4"><div><a href="https://github.com/sosolimited/Design-Census" target="_blank">Download code on GitHub</a></div></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+</div>
+</nav>
 
-    #legend .legend-title {
-      font-size: 1.2rem;
-      text-transform: uppercase;
-    }
+<div class="container">
+  <div id="about-text">
+    <h2 style="color:#cdcfd5">The Design Census Data Explorer is a tool that shows patterns and trends in the <a href="http://designcensus.org/#!/">2016 AIGA Design Census</a>. With nearly 10,000 responses from across the nations, there are many stories and surprises to be discovered within the data. Find a compelling combination? Download your findings to a CSV file and create a visualization of your own. </h2>
+    <h2 style="color:#cdcfd5">This tool was created by <a href="https://www.sosolimited.com/">Sosolimited</a>, an art, design, and technology studio and the official data visualization partner of the 2016 Design Census.</h2>
+  </div>
+  <br/><br/>
+</div>
 
-    #legend circle {
-      fill: none;
-      stroke: #000;
-    }
+<div class="container">
+  <div id="dropdowns">
+    <div class="select-style x" style="float:left">
+      <select id="data-selection-1">
+        <option selected disabled>Select question for X axis</option>
+      </select>
+    </div>
+<!--   <div class="x"><h2>×</h2></div>
+-->  <div class="select-style y" style="float:left">
+<select id="data-selection-2">
+  <option selected disabled>Select question for Y axis</option>
+</select>
+</div>
+</div>
+</div><!-- /.container -->
 
-    #legend .circle-label {
-      font-size: 1rem;
-    }
+<div class="container">
+  <div id="graph-area"></div>
+</div>
 
-    /* Tooltip div */
 
-    div.tooltip {
-      position: absolute;
-      text-align: left;
-      width: 20rem;
-      height: 6rem;
-      padding: 1rem;
-      font: 1.2rem sans-serif;
-      background: lightsteelblue;
-      border: 0rem;
-      border-radius: 0.8rem;
-      pointer-events: none;
-    }
 
-  </style>
-</head>
 
-<body>
+<script>
 
-    <h1>Data Tool</h1>
-
-    <select id="data-selection-1">
-      <option selected disabled>Select question for X axis</option>
-    </select>
-    <select id="data-selection-2">
-      <option selected disabled>Select question for Y axis</option>
-    </select>
-
-    <br/><br/>
-
-    <div id="save-csv"><a download="aiga_data.csv" href="" target="_blank">Save CSV</a></div>
-
-    <div id="graph-area"></div>
-
-  <script>
-
-    var questions = undefined,
-        responses = undefined,
+  var questions = undefined,
+  responses = undefined,
         // Margins around graph.
-        margin = {top: 50, right: 200, bottom: 300, left: 300},
+        margin = {top: 50, right: 0, bottom: 360, left: 200},
         // Width & height of graph.
-        width = 1080 - margin.left - margin.right,
-        height = 960 - margin.top - margin.bottom,
+        width = 950 - margin.left - margin.right,
+        height = 950 - margin.top - margin.bottom,
         curQuestion1 = undefined,
         curQuestion2 = undefined,
         curResponseData = undefined;
 
     // Define the div for the tooltip
     var divTooltip = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
     // Create chart container group within SVG element.
     var svg = d3.select('#graph-area').append('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
-      .append('g')
+    .attr('width', width + margin.left + margin.right + 180)
+    .attr('height', height + margin.top + margin.bottom)
+    .append('g')
         // TIP: svg groups ('g') can only be moved using transform-translate.
         .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
 
-    // Create a legend container group within SVG element also.
-    var legendLeftPadding = 80;
-    var legend = d3.select("#graph-area svg").append('g')
-        .attr('id', 'legend')
-        .attr('transform', 'translate(' + (margin.left + width + legendLeftPadding) + ',' + 0 + ')');
-    legend.append('text')
-        .attr('class', 'legend-title')
-        // Move the Legend title.
-        .attr('x', 0)
-        .attr('y', 50)
-        .text('Legend');
-    legend = legend.append('g')
-        .attr('width', (margin.right - legendLeftPadding))
-        // Move the circles in the legend.
-        .attr('transform', 'translate(0,' + 100 + ')');
+    // // Create a legend container group within SVG element also.
+    // var legendLeftPadding = 80;
+    // var legend = d3.select("#graph-area svg").append('g')
+    // .attr('id', 'legend')
+    // .attr('transform', 'translate(' + (margin.left + width + legendLeftPadding) + ',' + 0 + ')');
+    // legend.append('text')
+    // .attr('class', 'legend-title')
+    //     // Move the Legend title.
+    //     .attr('x', 0)
+    //     .attr('y', 50)
+    //     .text('Legend');
+    //     legend = legend.append('g')
+    //     .attr('width', (margin.right - legendLeftPadding))
+    //     // Move the circles in the legend.
+    //     .attr('transform', 'translate(0,' + 100 + ')');
 
     // Load CSV first to remove empty rows from it, then load JSON.
     d3.xhr('data/wco-responses-13dec2016-2.csv').get(function (err, response) {
@@ -194,7 +195,7 @@ console.log('Raw responses', responses)
     // NB: iQuestionNum1 is for X scale, iQuestionNum2 is for Y scale.
     function updateGraph(iQuestionNum1, iQuestionNum2) {
 
-console.log('-updateGraph('+iQuestionNum1+', '+iQuestionNum2+')')
+      console.log('-updateGraph('+iQuestionNum1+', '+iQuestionNum2+')')
 
       ////////////////////////////////////////////////////////////
       // Part 1: prepare data
@@ -222,23 +223,23 @@ console.log('-updateGraph -curResponseData', curResponseData)
       var xScale, yScale, radiusScale;
       switch (curQuestion1.type) {
         case 'range':
-          xScale = d3.scale.linear().range([0, width]);
-          break;
+        xScale = d3.scale.linear().range([0, width]);
+        break;
         case 'choice':
-          xScale = d3.scale.ordinal().rangeRoundPoints([0, width]);
-          break;
+        xScale = d3.scale.ordinal().rangeRoundPoints([0, width]);
+        break;
         default:
-          console.error("Unable to choose proper d3.scale for the Question 1's type.")
+        console.error("Unable to choose proper d3.scale for the Question 1's type.")
       }
       switch (curQuestion2.type) {
         case 'range':
-          yScale = d3.scale.linear().range([height, 0]);
-          break;
+        yScale = d3.scale.linear().range([height, 0]);
+        break;
         case 'choice':
-          yScale = d3.scale.ordinal().rangeRoundPoints([height, 0]);
-          break;
+        yScale = d3.scale.ordinal().rangeRoundPoints([height, 0]);
+        break;
         default:
-          console.error("Unable to choose proper d3.scale for the Question 2's type.")
+        console.error("Unable to choose proper d3.scale for the Question 2's type.")
       }
       xScale.domain(domainQ1);
       yScale.domain(domainQ2);
@@ -257,60 +258,61 @@ console.log('-updateGraph -curResponseData', curResponseData)
 
       // Draw circles
       svg.selectAll('.dot')
-          .data(curResponseData)
-        .enter().append('circle')
+      .data(curResponseData)
+      .enter().append('circle')
           .attr('class', 'dot')       // add any number of CSS classes for styling
           .attr('r', function(d){ return radiusScale(d.count); })   // radius
           .attr('cx', function(d){ return xScale(d.x); })   // center-x position
           .attr('cy', function(d){ return yScale(d.y); })   // center-y position
-          .style('fill', 'red')       // inject CSS directly using .style()
-          .attr('fill-opacity', 0.2) // this is an attribute, not a CSS property, but it might work in CSS too.
+          .style('fill', '#ffd849')       // inject CSS directly using .style()
+          .attr('fill-opacity', 0.3) // this is an attribute, not a CSS property, but it might work in CSS too.
           // Hover action for circles.
           .on("mouseover", function(d) {
             divTooltip.transition()
-              .duration(200)
-              .style("opacity", .9);
+            .duration(200)
+            .style("opacity", .9);
             divTooltip
-              .html("x: " + d.x + "<br/>y: " + d.y + "<br/>count: " + d.count)
-              .style("left", (d3.event.pageX + 40) + "px")
-              .style("top", (d3.event.pageY - 28) + "px");
+            .html("x: " + d.x + "<br/>y: " + d.y + "<br/>count: " + d.count)
+            .style("left", (d3.event.pageX + 15) + "px")
+            .style("top", (d3.event.pageY + 0) + "px");
             $(this)
-              .addClass('hovered');
+            .addClass('hovered');
           })
           .on("mouseout", function(d) {
             divTooltip.transition()
-              .duration(500)
-              .style("opacity", 0);
+            .duration(500)
+            .style("opacity", 0);
             $(this)
-              .removeClass('hovered')
+            .removeClass('hovered')
           });
 
       // Draw axes after circles, so they are layered above them.
       // Draw X axis
       svg.append('g')
-          .attr('class', 'x axis')
-          .attr('transform', 'translate(0,'+ height +')')
-          .call(xAxis)
-          .call(tickModifier)
-        .append('text')
-          .attr('class', 'axis-label')
-          .attr('x', width)
-          .attr('y', -6)
-          .style('text-anchor', 'end')
-          .text(curQuestion1.attributes.slug);
+      .attr('class', 'x axis')
+      .attr('transform', 'translate(0,'+ height +')')
+      .call(xAxis)
+      .call(tickModifier)
+      .append('text')
+      .attr('class', 'axis-label-x')
+      .attr('x', width/2)
+      .attr('y', 200)
+      .style('text-anchor', 'middle')
+      .text(curQuestion1.attributes.slug);
 
       // Draw Y axis
       svg.append('g')
-          .attr('class', 'y axis')
-          .call(yAxis)
-          .call(tickModifier)
-        .append('text')
-          .attr('class', 'axis-label')
-          .attr('transform', 'rotate(-90)')
-          .attr('y', 6)
-          .attr('dy', '.71em')
-          .style('text-anchor', 'end')
-          .text(curQuestion2.attributes.slug);
+      .attr('class', 'y axis')
+      .call(yAxis)
+      .call(tickModifier)
+      .append('text')
+      .attr('class', 'axis-label-y')
+      .attr('transform', 'rotate(-90)')
+      .attr('x', -width/2)
+      .attr('y', -200)
+      .attr('dy', '.71em')
+      .style('text-anchor', 'start')
+      .text(curQuestion2.attributes.slug);
 
       // Modify default appearance of ticks on the axes.
       function tickModifier(iQuestionType) {
@@ -318,22 +320,23 @@ console.log('-updateGraph -curResponseData', curResponseData)
         // Move X ticks away from axis, for numbers and sideways text ticks.
         var xTicks = d3.selectAll('.x .tick').select('text');
         xTicks
-          .attr('x', '0.5rem')
-          .attr('y', '5rem')
-          .attr('dy', '0rem')
-          .style('text-anchor', 'end');
+        .attr('x', '0.5rem')
+        .attr('y', '2rem')
+        .attr('dy', '0rem')
+        .style('text-anchor', 'end');
         if (curQuestion1.type === 'choice') {
           xTicks
-            .attr('x', '-5rem')
-            .attr('y', '.25rem')
-            .attr('transform', 'rotate(-90)');
+          .attr('x', '-1rem')
+          .attr('y', '1rem')
+          .attr('transform', 'rotate(-45)');
         }
 
         // Move Y ticks aways from axis.
         var yTicks = d3.selectAll('.y .tick').select('text');
         yTicks
-          .attr('x', '-5rem');
-
+        .attr('x', '-1rem')
+        .attr('width', '100')
+        .style('text-anchor', 'end');
       }
 
       // Recreate legend (every chart has a different maximum value for the largest circle).
@@ -345,8 +348,8 @@ console.log('-updateGraph -curResponseData', curResponseData)
       var legendCircleStrokeWidth = 1;
 
       var legendCircles = legend.selectAll('circle')
-          .data(legendCircleScale.domain())
-        .enter();
+      .data(legendCircleScale.domain())
+      .enter();
       // Add circles in the legend
       legendCircles.append('circle')
           .attr('r', function(d){ return legendCircleScale(d); })   // radius
@@ -360,17 +363,17 @@ console.log('-updateGraph -curResponseData', curResponseData)
           .style('stroke-width', legendCircleStrokeWidth);
       // Add number above each legend circle.
       legendCircles.append('text')
-          .attr('class', 'circle-label')
-          .attr('x', legend.attr('width')/2)
-          .attr('y', function(d,i) {
-            var alignAboveCircle = (legendCircleScale.range()[1] * 2) - legendCircleScale(d);
-            alignAboveCircle -= ((legendCircleStrokeWidth+2) * (legendCircleScale.domain().length - i));
+      .attr('class', 'circle-label')
+      .attr('x', legend.attr('width')/2)
+      .attr('y', function(d,i) {
+        var alignAboveCircle = (legendCircleScale.range()[1] * 2) - legendCircleScale(d);
+        alignAboveCircle -= ((legendCircleStrokeWidth+2) * (legendCircleScale.domain().length - i));
             // Move number above each legend circle.
             alignAboveCircle -= (legendCircleScale(d) + 6);
             return alignAboveCircle;
           })
-          .style('text-anchor', 'middle')
-          .text(function(d,i) { return legendCircleScale.domain()[i]; })
+      .style('text-anchor', 'middle')
+      .text(function(d,i) { return legendCircleScale.domain()[i]; })
 
     }
 
@@ -416,9 +419,9 @@ console.log('-updateGraph -curResponseData', curResponseData)
 
 // debugger;
 
-        var curResult = {};
+var curResult = {};
 
-        _.forOwn(response, function(responseVal, question) {
+_.forOwn(response, function(responseVal, question) {
 
           // X
           if (Number(question.split('-')[0]) === Number(iQuestionNum1)) {
@@ -488,9 +491,9 @@ console.log('-updateGraph -curResponseData', curResponseData)
 
 // debugger;
 
-        var curResult = {};
+var curResult = {};
 
-        _.forOwn(response, function(responseVal, question){
+_.forOwn(response, function(responseVal, question){
 
           // X
           if (Number(question.split('-')[0]) === Number(iQuestionNum1)) {
@@ -573,25 +576,45 @@ console.log('-updateGraph -curResponseData', curResponseData)
     function getCSV(){
 
       if (curQuestion1 != undefined &&
-          curQuestion2 != undefined &&
-          curResponseData != undefined) {
+        curQuestion2 != undefined &&
+        curResponseData != undefined) {
 
         var csvQuestions = curQuestion1.attributes.slug + ", " + curQuestion2.attributes.slug + ", count";
-        var csvResponseData = curResponseData.map(function(row) {
-          return (row.x + ", " + row.y + ", " + row.count);
-        });
+      var csvResponseData = curResponseData.map(function(row) {
+        return (row.x + ", " + row.y + ", " + row.count);
+      });
 
-        var csv = csvQuestions + "\n" + csvResponseData.join("\n");
-        var result = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+      var csv = csvQuestions + "\n" + csvResponseData.join("\n");
+      var result = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
 
-        return result;
+      return result;
 
-      } else {
-        console.warn("Can't export CSV since data in undefined.")
-      }
-
+    } else {
+      console.warn("Can't export CSV since data in undefined.")
     }
 
+  }
 
-  </script>
-</body>
+$(function() {
+
+    var $body = $(document);
+    $body.bind('scroll', function() {
+        // "Disable" the horizontal scroll.
+        if ($body.scrollLeft() !== 0) {
+            $body.scrollLeft(0);
+        }
+    });
+
+});
+
+</script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+  </html>
