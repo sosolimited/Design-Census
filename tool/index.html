@@ -131,22 +131,6 @@
         // TIP: svg groups ('g') can only be moved using transform-translate.
         .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
 
-    // // Create a legend container group within SVG element also.
-    // var legendLeftPadding = 80;
-    // var legend = d3.select("#graph-area svg").append('g')
-    // .attr('id', 'legend')
-    // .attr('transform', 'translate(' + (margin.left + width + legendLeftPadding) + ',' + 0 + ')');
-    // legend.append('text')
-    // .attr('class', 'legend-title')
-    //     // Move the Legend title.
-    //     .attr('x', 0)
-    //     .attr('y', 50)
-    //     .text('Legend');
-    //     legend = legend.append('g')
-    //     .attr('width', (margin.right - legendLeftPadding))
-    //     // Move the circles in the legend.
-    //     .attr('transform', 'translate(0,' + 100 + ')');
-
     // Load CSV first to remove empty rows from it, then load JSON.
     //d3.xhr('data/wco-responses-13dec2016-2.csv').get(function (err, response) {
       d3.xhr('data/PRODUCTION-us_cleaned.csv').get(function (err, response) {
@@ -377,42 +361,6 @@ console.log('-updateGraph -curResponseData', curResponseData)
         .attr('width', '100')
         .style('text-anchor', 'end');
       }
-
-      // Recreate legend (every chart has a different maximum value for the largest circle).
-      $(legend.node()).empty();
-
-      var legendCircleScale = radiusScale;
-      // Add new value to domain, half of current max value.
-      legendCircleScale.domain().splice(1, 0, Math.round(legendCircleScale.domain()[1]/2));
-      var legendCircleStrokeWidth = 1;
-
-      var legendCircles = legend.selectAll('circle')
-      .data(legendCircleScale.domain())
-      .enter();
-      // Add circles in the legend
-      legendCircles.append('circle')
-          .attr('r', function(d){ return legendCircleScale(d); })   // radius
-          .attr('cx', legend.attr('width')/2)                       // center-x position
-          .attr('cy', function(d,i) {                               // center-y position
-            // Draw legend circles inside each other, like russian dolls.
-            var alignToBottom = (legendCircleScale.range()[1] * 2) - legendCircleScale(d);
-            alignToBottom -= ((legendCircleStrokeWidth+2) * (legendCircleScale.domain().length - i));
-            return alignToBottom;
-          })
-          .style('stroke-width', legendCircleStrokeWidth);
-      // Add number above each legend circle.
-      legendCircles.append('text')
-      .attr('class', 'circle-label')
-      .attr('x', legend.attr('width')/2)
-      .attr('y', function(d,i) {
-        var alignAboveCircle = (legendCircleScale.range()[1] * 2) - legendCircleScale(d);
-        alignAboveCircle -= ((legendCircleStrokeWidth+2) * (legendCircleScale.domain().length - i));
-            // Move number above each legend circle.
-            alignAboveCircle -= (legendCircleScale(d) + 6);
-            return alignAboveCircle;
-          })
-      .style('text-anchor', 'middle')
-      .text(function(d,i) { return legendCircleScale.domain()[i]; })
 
     }
 
