@@ -113,6 +113,10 @@
     shape-rendering: crispEdges;
   }
 
+  .axis line {
+    margin-left: 10px;
+  }
+
   .axis-label-x {
     font-size: 18px;
     font-weight: 400;
@@ -137,7 +141,6 @@
     position: absolute;
     fill: #2A2B2C;
   }
-
 
 
   .dot {
@@ -192,7 +195,7 @@ div.tooltip {
   font-family: 'Poppins', sans-serif;
   font-size: 12px;
   line-height: 20px;
-  background: #828187;
+  background: #a5a4a0;
   color: #2A2B2C;
   pointer-events: none;
 }
@@ -206,7 +209,7 @@ div.tooltip {
   margin-left: -15px;
   border-width: 15px;
   border-style: solid;
-  border-color: #828187 transparent transparent transparent;
+  border-color: #a5a4a0 transparent transparent transparent;
 }
 
 
