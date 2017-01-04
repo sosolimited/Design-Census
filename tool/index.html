@@ -288,23 +288,15 @@ console.log('-updateGraph -curResponseData', curResponseData)
       .append('text')
       .attr('class', 'axis-label-x')
       .attr('x', width/2)
-      .attr('y', 60)
+      .attr('y', function(d){
+        if (curQuestion1.type === 'choice') {
+          return 150;
+        } else {
+          return 60;
+        }
+      })
       .style('text-anchor', 'middle')
       .text(curQuestion1.attributes.slug);
-
-      if (curQuestion1.type === 'choice') {
-        svg.append('g')
-        .attr('class', 'x axis')
-        .attr('transform', 'translate(0,'+ height +')')
-        .call(xAxis)
-        .call(tickModifier)
-        .append('text')
-        .attr('class', 'axis-label-x')
-        .attr('x', width/2)
-        .attr('y', 150)
-        .style('text-anchor', 'middle')
-        .text(curQuestion1.attributes.slug);
-      }
 
       // Draw Y axis
       svg.append('g')
@@ -315,25 +307,16 @@ console.log('-updateGraph -curResponseData', curResponseData)
       .attr('class', 'axis-label-y')
       .attr('transform', 'rotate(-90)')
       .attr('x', -height/2)
-      .attr('y', -65)
+      .attr('y', function(d){
+        if (curQuestion2.type === 'choice') {
+          return -200;
+        } else {
+          return -65;
+        }
+      })
       .attr('dy', '.71em')
       .style('text-anchor', 'middle')
       .text(curQuestion2.attributes.slug);
-
-      if (curQuestion2.type === 'choice') {
-        svg.append('g')
-        .attr('class', 'y axis')
-        .call(yAxis)
-        .call(tickModifier)
-        .append('text')
-        .attr('class', 'axis-label-y')
-        .attr('transform', 'rotate(-90)')
-        .attr('x', -height/2)
-        .attr('y', -200)
-        .attr('dy', '.71em')
-        .style('text-anchor', 'middle')
-        .text(curQuestion2.attributes.slug);
-      }
 
       // Modify default appearance of ticks on the axes.
       function tickModifier(iQuestionType) {
