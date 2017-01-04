@@ -52,13 +52,13 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="https://www.sosolimited.com/" style="float:left"><img class="large" style="max-width:129px;height:auto" src="assets/SOSOlogoVector-yellow@2x.png"><img class="small" style="max-width:50px;height:auto" src="assets/SOSOlogoVectorShort-yellow@2x.png"></a>
-          <li style="float:right; border-bottom: 3px solid #ffd849; list-style-type: none" class="h4">Design Census Data Explorer</li>
+          <a class="navbar-brand" href="https://www.sosolimited.com/" style="float:left"><img class="large" style="max-width:129px;height:auto" src="assets/SOSOlogoVector-red@2x.png"><img class="small" style="max-width:50px;height:auto" src="assets/SOSOlogoVectorShort-red@2x.png"></a>
+          <li style="float:right; border-bottom: 3px solid #F75434; list-style-type: none" class="h4">Design Census Data Explorer</li>
         </div>
         <div id="navbar" class="collapse navbar-collapse" style="float:right">
           <ul class="nav navbar-nav">
-            <li style="border-bottom: 3px solid #478acc" class="h4"><div id="save-csv"><a download="aiga_data.csv" href="" target="_blank">Save selection to CSV</a></div></li>
-            <li style="border-bottom: 3px solid #afe7c6" class="h4"><div><a href="https://github.com/sosolimited/Design-Census" target="_blank">Download code on GitHub</a></div></li>
+            <li style="border-bottom: 3px solid #FCC006" class="h4"><div id="save-csv"><a download="aiga_data.csv" href="" target="_blank">Save selection to CSV</a></div></li>
+            <li style="border-bottom: 3px solid #3BADE5" class="h4"><div><a href="https://github.com/sosolimited/Design-Census" target="_blank">Download code on GitHub</a></div></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -67,28 +67,28 @@
 </div>
 </nav>
 <div class="allContent">
-  <div class="container">
-    <div id="error-text">
-      <h1 style="color:#FFFFFF">To access The Design Census Data Explorer, please view this page on a screen that is at least 1024px in width.</h2>
-      </div>
+<div class="container">
+  <div id="error-text">
+    <h1 style="color:#2A2B2C">To access The Design Census Data Explorer, please view this page on a screen that is at least 1024px in width.</h2>
+  </div>
+</div>
+<div class="container">
+  <div id="about-text">
+    <h2 style="color:#2A2B2C">The Design Census Data Explorer is a tool that shows patterns and trends in the <a href="http://designcensus.org/#!/">2016 AIGA Design Census</a>. With nearly 10,000 responses from across the nation, there are many stories and surprises to be revealed within the data. Find a compelling combination? Download your discoveries to a CSV file and create a visualization of your own. </h2>
+    <h2 style="color:#2A2B2C">This tool was created by <a href="https://www.sosolimited.com/">Sosolimited</a>, an art, design, and technology studio and the official data visualization partner of the 2016 Design Census.</h2>
+  </div>
+  <br/><br/>
+</div>
+
+
+
+<div class="container">
+  <div id="dropdowns">
+    <div class="select-style x" style="float:left">
+      <select id="data-selection-1">
+        <option selected disabled>Select question for X axis</option>
+      </select>
     </div>
-    <div class="container">
-      <div id="about-text">
-        <h2 style="color:#FFFFFF">The Design Census Data Explorer is a tool that shows patterns and trends in the <a href="http://designcensus.org/#!/">2016 AIGA Design Census</a>. With nearly 10,000 responses from across the nation, there are many stories and surprises to be revealed within the data. Find a compelling combination? Download your discoveries to a CSV file and create a visualization of your own. </h2>
-        <h2 style="color:#FFFFFF">This tool was created by <a href="https://www.sosolimited.com/">Sosolimited</a>, an art, design, and technology studio and the official data visualization partner of the 2016 Design Census.</h2>
-      </div>
-      <br/><br/>
-    </div>
-
-
-
-    <div class="container">
-      <div id="dropdowns">
-        <div class="select-style x" style="float:left">
-          <select id="data-selection-1">
-            <option selected disabled>Select question for X axis</option>
-          </select>
-        </div>
 <!--   <div class="x"><h2>×</h2></div>
 -->  <div class="select-style y" style="float:left">
 <select id="data-selection-2">
@@ -149,28 +149,28 @@
 
     // Load CSV first to remove empty rows from it, then load JSON.
     //d3.xhr('data/wco-responses-13dec2016-2.csv').get(function (err, response) {
-      d3.xhr('data/PRODUCTION-us_cleaned.csv').get(function (err, response) {
+    d3.xhr('data/PRODUCTION-us_cleaned.csv').get(function (err, response) {
 
-        var dirtyCSV = response.responseText;
-        var cleanCSV = dirtyCSV.split('\n\r').join('');
-        var parsedCSV = d3.csv.parse(cleanCSV);
+      var dirtyCSV = response.responseText;
+      var cleanCSV = dirtyCSV.split('\n\r').join('');
+      var parsedCSV = d3.csv.parse(cleanCSV);
 
-        d3.json("data/PRODUCTION-questions_cleaned.json", function(error, json) {
-          parseData(json, parsedCSV);
-        });
-
+      d3.json("data/PRODUCTION-questions_cleaned.json", function(error, json) {
+        parseData(json, parsedCSV);
       });
 
-      function parseData(iQuestions, iResponses) {
+    });
 
-        questions = iQuestions;
-        responses = iResponses;
+    function parseData(iQuestions, iResponses) {
 
-        var selectableQuestions = questions.filter(function(d){
-          if (d.type === "range") { return true; }
-          else if (d.type === "choice" && d.attributes.allow_multiple === false) { return true; }
-          else { return false; }
-        });
+      questions = iQuestions;
+      responses = iResponses;
+
+      var selectableQuestions = questions.filter(function(d){
+        if (d.type === "range") { return true; }
+        else if (d.type === "choice" && d.attributes.allow_multiple === false) { return true; }
+        else { return false; }
+      });
 
 // debugger;
 console.log('Raw questions', questions)
@@ -272,8 +272,8 @@ console.log('-updateGraph -curResponseData', curResponseData)
           .attr('r', function(d){ return radiusScale(d.count); })   // radius
           .attr('cx', function(d){ return xScale(d.x); })   // center-x position
           .attr('cy', function(d){ return yScale(d.y); })   // center-y position
-          .style('fill', '#ffd849')       // inject CSS directly using .style()
-          .attr('fill-opacity', 0.3) // this is an attribute, not a CSS property, but it might work in CSS too.
+          .style('fill', '#F75434')       // inject CSS directly using .style()
+          .attr('fill-opacity', 0.45) // this is an attribute, not a CSS property, but it might work in CSS too.
           // Hover action for circles.
           .on("mouseover", function(d) {
             divTooltip.transition()
@@ -603,17 +603,17 @@ _.forOwn(response, function(responseVal, question){
 
   }
 
-  $(function() {
+$(function() {
 
     var $body = $(document);
     $body.bind('scroll', function() {
         // "Disable" the horizontal scroll.
         if ($body.scrollLeft() !== 0) {
-          $body.scrollLeft(0);
+            $body.scrollLeft(0);
         }
-      });
+    });
 
-  });
+});
 
 </script>
     <!-- Bootstrap core JavaScript

@@ -5,7 +5,7 @@
     font-family: 'Poppins', sans-serif;
     font-size: 1rem;
     color: black;
-    background-color: #478acc;
+    background-color: #FCC006;
     text-align: left;
     overflow-x:hidden;
   }
@@ -62,13 +62,13 @@
     margin-right: 20px;
     padding: 5px 0 0 0;
     width: 385px;
-    border-bottom: 3px solid #afe7c6;
+    border-bottom: 3px solid #3BADE5;
     border-top: none;
     border-right: none;
     border-left: none;
     box-shadow: none;
-    color: #FFFFFF;
-    background: transparent url("../assets/carrot2.png") no-repeat 86% 50%;
+    color: #2A2B2C;
+    background: transparent url("../assets/carrot3.png") no-repeat 86% 50%;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -83,13 +83,13 @@
     margin-right: 20px;
     padding: 5px 0 0 0;
     width: 385px;
-    border-bottom: 3px solid #67a5cf;
+    border-bottom: 3px solid #FCC006;
     border-top: none;
     border-right: none;
     border-left: none;
     box-shadow: none;
-    color: #FFFFFF;
-    background: transparent url("../assets/carrot2.png") no-repeat 86% 50%;
+    color: #2A2B2C;
+    background: transparent url("../assets/carrot3.png") no-repeat 86% 50%;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -109,7 +109,7 @@
   .axis path,
   .axis line {
     fill: none;
-    stroke: #FFFFFF;
+    stroke: #2A2B2C;
     shape-rendering: crispEdges;
   }
 
@@ -119,7 +119,7 @@
     line-height: 22px;
     text-align: center;
     text-transform: capitalize;
-    fill: #afe7c6;
+    fill: #3BADE5;
   }
 
   .axis-label-y {
@@ -128,14 +128,14 @@
     line-height: 22px;
     text-align: center;
     text-transform: capitalize;
-    fill:#67a5cf;
+    fill:#FCC006;
   }
 
   .axis .tick text {
     font-size: 13px;
     text-align: center;
     position: absolute;
-    fill: #FFFFFF;
+    fill: #2A2B2C;
   }
 
 
@@ -151,7 +151,7 @@
 
   .dot.hovered {
     stroke-width: 0.2rem;
-    stroke: #FFFFFF;
+    stroke: #2A2B2C;
   }
   @media (min-width: 1024px) {
    #graph-area {
@@ -193,7 +193,7 @@ div.tooltip {
   font-size: 12px;
   line-height: 20px;
   background: #828187;
-  color: #FFFFFF;
+  color: #2A2B2C;
   pointer-events: none;
 }
 
@@ -219,7 +219,7 @@ div.tooltip {
 
 h2 a {
   text-decoration: none;
-  color: #ffd849;
+  color: #F75434;
 }
 
 @media (min-width: 1440px) {
@@ -290,7 +290,7 @@ h2 a {
     font-weight: 400;
     line-height: 30px;
     text-align: left;
-    color: #FFFFFF;
+    color: #2A2B2C;
 
   }
 
@@ -304,7 +304,7 @@ h2 a {
   }
 
   .h4 {
-    border-bottom: 3px solid #FFFFFF;
+    border-bottom: 3px solid #2A2B2C;
     margin-left: 3rem;
     padding-bottom: 8px;
     width: 12rem;
