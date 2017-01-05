@@ -240,7 +240,7 @@ console.log('-updateGraph -curResponseData', curResponseData)
           yScale = d3.scale.ordinal().rangeRoundPoints([height, 0]);
           break;
         case 'text':
-          xScale = d3.scale.linear().range([0, width]);
+          yScale = d3.scale.linear().range([height, 0]);
           break;
         default:
           console.error("Unable to choose proper d3.scale for the Question 2's type.")
@@ -365,19 +365,26 @@ console.log(yScale.range())
     }
 
     // Data notes:
-    // - question.type = "range"    -->   data is NUMBER
-    // - question.type = "choice"   -->   data is STRING
+    // - question.type = "range"      -->   data is NUMBER
+    // - question.type = "choice"     -->   data is STRING
+    // - salary questions 20.1, 20.2  -->   data is NUMBER
     function getQuestionDomain(iQuestionNum) {
 
       var result = [];
 
       var curQuestion = _.find(questions, {'question': iQuestionNum});
+
+debugger;
+
       if (curQuestion.type === 'choice') {
         result = _.map(curQuestion.attributes.question_choice_options, 'title');
       } else if (curQuestion.type === 'range') {
         result = [curQuestion.attributes.min, curQuestion.attributes.max];
       } else if (curQuestion.type === 'text') {
-        // Manully set domain for salary questions, since there is no max/min provided in the questions JSON file.
+
+debugger;
+
+        // Manually set domain for salary questions, since there is no max/min provided in the questions JSON file.
         if (Number(iQuestionNum) === 20.1) {
           result = [0, 1000000];
         } else if (Number(iQuestionNum) === 20.2) {
@@ -386,6 +393,8 @@ console.log(yScale.range())
       } else {
         console.error('getQuestionDomain- Cannot retrieve data domain for Question #'+ iQuestionNum);
       }
+
+debugger;
 
       return result;
 
@@ -401,13 +410,15 @@ console.log(yScale.range())
       var q1Type = q1.type;
       var q2Type = q2.type;
       var q1Attr = {
-        "enable_plus": (q1.attributes.enable_plus || (Number(iQuestionNum1) === 20.1 || Number(iQuestionNum1) === 20.2 ? true : false)) || false       // 'enable_plus' means the max value in range can have a + (ex: '1000+') which needs to be treated.
+        // 'enable_plus' means the max value in range can have a + (ex: '1000+') which needs to be treated.
+        // salary questions #20.1 and 20.2 also have answers like '1000+' but don't use the enable_plus property, so we must set it manually.
+        "enable_plus": (q1.attributes.enable_plus || (Number(iQuestionNum1) === 20.1 || Number(iQuestionNum1) === 20.2 ? true : false)) || false
       };
       var q2Attr = {
         "enable_plus": (q2.attributes.enable_plus || (Number(iQuestionNum2) === 20.1 || Number(iQuestionNum2) === 20.2 ? true : false)) || false
       };
 
-debugger;
+// debugger;
 
       ////////////////////////////////////////////////////////////
       // Part 1: combine questions into x,y pairs.
@@ -548,7 +559,7 @@ debugger;
       }
       result = Number(result);
 
-debugger;
+// debugger;
 
       return result;
 
