@@ -153,24 +153,6 @@
 console.log('Raw questions', questions)
 console.log('Raw responses', responses)
 
-      //DEV
-// console.log('----------------')
-//       responses = responses.map(function(d) {
-//         _.forOwn(d, function(response, question) {
-//           var idx = response.indexOf('Agency (employee at large organization, 11+)');
-//           if (idx > -1) {
-//             d[question] = 'Agency (large organization)';
-// console.log(d);
-//           }
-//           //EXAMPLE:
-//           // var customEntryMarkerIdx = result.indexOf(';');
-//           // if (customEntryMarkerIdx > -1) {
-//           //   result = result.slice(0, customEntryMarkerIdx);
-//           // }
-//         });
-//         return d;
-//       });
-
       var selectableQuestions = questions.filter(function(d){
         if (d.type === "range") { return true; }
         else if (d.type === "choice" && d.attributes.allow_multiple === false) { return true; }
@@ -255,82 +237,8 @@ console.log('-updateGraph -curResponseData', curResponseData)
       // Use a square root scale to calculate proper radius for a linear area scale.
       radiusScale = d3.scale.pow().exponent(.5).range(rangeRadius).domain(domainRadius);
 
-      var xAxis = d3.svg.axis().scale(xScale).orient('bottom');
-      var yAxis = d3.svg.axis().scale(yScale).orient('left');
-
-      //DEV
-      yAxis.tickFormat(function(d){
-
-        if (d === 'Agency (employee at large organization, 11+)') {
-          d = 'Agency (large organization)';
-        }
-
-        if (d === 'Collective (collaborative group of independents)') {
-          d = 'Collective';
-        }
-
-        if (d === 'Freelance / Self-employed (free agent)') {
-          d = 'Freelance';
-        }
-
-        if (d === 'In-house (employee at a brand/company)') {
-          d = 'In-house (brand/company)';
-        }
-
-        if (d === 'In-house (at NGO, non-profit, or government)') {
-          d = 'In-house (other)';
-        }
-
-        if (d === 'Partnership (shared ownership)') {
-          d = 'Partnership';
-        }
-
-        if (d === 'Studio (employee at small organization, 3\u201310)') {
-          d = 'Studio (small organization)';
-        }
-
-        if (d === 'Design, environmental graphics') {
-          d = 'Design, environmental';
-        }
-
-        if (d === 'Junior Designer, digital and print') {
-          d = 'Jr. Designer, digital/print';
-        }
-
-        if (d === 'Owner, Partner, or Principal') {
-          d = 'Owner/Partner/Principal';
-        }
-
-        if (d === 'Project Manager, digital and print') {
-          d = 'Project Mgr., digital/print';
-        }
-
-        if (d === 'Self-employed (no employees)') {
-          d = 'Self-employed';
-        }
-
-        if (d === 'Senior Designer, digital and print') {
-          d = 'Sr. Designer, digital/print';
-        }
-
-        if (d === 'User Experience (UX) Designer') {
-          d = 'UX Designer';
-        }
-
-        if (d === 'Technical degree or certificate') {
-          d = 'Technical degree';
-        }
-
-        if (d === 'Community sharing (TED, Twitter, Instagram, etc)') {
-          d = 'Community sharing';
-        }
-
-        if (d === 'Online classes (Skillshare, Lynda.com, MOOCs, etc)') {
-          d = 'Online classes';
-        }
-
-        return d;
-      });
+      var xAxis = d3.svg.axis().scale(xScale).orient('bottom').tickFormat(formatAxisTickLabel);
+      var yAxis = d3.svg.axis().scale(yScale).orient('left').tickFormat(formatAxisTickLabel);
 
       ////////////////////////////////////////////////////////////
       // Part 3: draw chart items
@@ -630,6 +538,68 @@ _.forOwn(response, function(responseVal, question){
 
     }
 
+    // Format axis tick labels to be shorter, etc.
+    function formatAxisTickLabel(d) {
+
+      if (d === 'Agency (employee at large organization, 11+)') {
+        d = 'Agency (large organization)';
+      }
+      else if (d === 'Collective (collaborative group of independents)') {
+        d = 'Collective';
+      }
+      else if (d === 'Freelance / Self-employed (free agent)') {
+        d = 'Freelance';
+      }
+      else if (d === 'In-house (employee at a brand/company)') {
+        d = 'In-house (brand/company)';
+      }
+      else if (d === 'In-house (at NGO, non-profit, or government)') {
+        d = 'In-house (other)';
+      }
+      else if (d === 'Partnership (shared ownership)') {
+        d = 'Partnership';
+      }
+      else if (d === 'Studio (employee at small organization, 3\u201310)') {
+        d = 'Studio (small organization)';
+      }
+      else if (d === 'Design, environmental graphics') {
+        d = 'Design, environmental';
+      }
+      else if (d === 'Junior Designer, digital and print') {
+        d = 'Jr. Designer, digital/print';
+      }
+      else if (d === 'Owner, Partner, or Principal') {
+        d = 'Owner/Partner/Principal';
+      }
+      else if (d === 'Writer / Copywriter') {
+        d = 'Writer/Copywriter';
+      }
+      else if (d === 'Project Manager, digital and print') {
+        d = 'Project Mgr., digital/print';
+      }
+      else if (d === 'Self-employed (no employees)') {
+        d = 'Self-employed';
+      }
+      else if (d === 'Senior Designer, digital and print') {
+        d = 'Sr. Designer, digital/print';
+      }
+      else if (d === 'User Experience (UX) Designer') {
+        d = 'UX Designer';
+      }
+      else if (d === 'Technical degree or certificate') {
+        d = 'Technical degree';
+      }
+      else if (d === 'Community sharing (TED, Twitter, Instagram, etc)') {
+        d = 'Community sharing';
+      }
+      else if (d === 'Online classes (Skillshare, Lynda.com, MOOCs, etc)') {
+        d = 'Online classes';
+      }
+
+      return d;
+
+    }
+
     function updateSaveCsvData() {
       $("#save-csv a").attr('href', getCSV());
     }
@@ -656,6 +626,7 @@ _.forOwn(response, function(responseVal, question){
 
   }
 
+  // Helper functions.
   $(function() {
 
     var $body = $(document);
