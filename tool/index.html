@@ -132,32 +132,50 @@
 
     // Load CSV first to remove empty rows from it, then load JSON.
     //d3.xhr('data/wco-responses-13dec2016-2.csv').get(function (err, response) {
-      d3.xhr('data/PRODUCTION-us_cleaned.csv').get(function (err, response) {
+    d3.xhr('data/PRODUCTION-us_cleaned.csv').get(function (err, response) {
 
-        var dirtyCSV = response.responseText;
-        var cleanCSV = dirtyCSV.split('\n\r').join('');
-        var parsedCSV = d3.csv.parse(cleanCSV);
+      var dirtyCSV = response.responseText;
+      var cleanCSV = dirtyCSV.split('\n\r').join('');
+      var parsedCSV = d3.csv.parse(cleanCSV);
 
-        d3.json("data/PRODUCTION-questions_cleaned.json", function(error, json) {
-          parseData(json, parsedCSV);
-        });
-
+      d3.json("data/PRODUCTION-questions_cleaned.json", function(error, json) {
+        parseData(json, parsedCSV);
       });
 
-      function parseData(iQuestions, iResponses) {
+    });
 
-        questions = iQuestions;
-        responses = iResponses;
+    function parseData(iQuestions, iResponses) {
 
-        var selectableQuestions = questions.filter(function(d){
-          if (d.type === "range") { return true; }
-          else if (d.type === "choice" && d.attributes.allow_multiple === false) { return true; }
-          else { return false; }
-        });
+      questions = iQuestions;
+      responses = iResponses;
 
 // debugger;
 console.log('Raw questions', questions)
 console.log('Raw responses', responses)
+
+      //DEV
+// console.log('----------------')
+//       responses = responses.map(function(d) {
+//         _.forOwn(d, function(response, question) {
+//           var idx = response.indexOf('Agency (employee at large organization, 11+)');
+//           if (idx > -1) {
+//             d[question] = 'Agency (large organization)';
+// console.log(d);
+//           }
+//           //EXAMPLE:
+//           // var customEntryMarkerIdx = result.indexOf(';');
+//           // if (customEntryMarkerIdx > -1) {
+//           //   result = result.slice(0, customEntryMarkerIdx);
+//           // }
+//         });
+//         return d;
+//       });
+
+      var selectableQuestions = questions.filter(function(d){
+        if (d.type === "range") { return true; }
+        else if (d.type === "choice" && d.attributes.allow_multiple === false) { return true; }
+        else { return false; }
+      });
 
       // Initially setup HTML elements.
       setupHTML(selectableQuestions);
@@ -239,6 +257,80 @@ console.log('-updateGraph -curResponseData', curResponseData)
 
       var xAxis = d3.svg.axis().scale(xScale).orient('bottom');
       var yAxis = d3.svg.axis().scale(yScale).orient('left');
+
+      //DEV
+      yAxis.tickFormat(function(d){
+
+        if (d === 'Agency (employee at large organization, 11+)') {
+          d = 'Agency (large organization)';
+        }
+
+        if (d === 'Collective (collaborative group of independents)') {
+          d = 'Collective';
+        }
+
+        if (d === 'Freelance / Self-employed (free agent)') {
+          d = 'Freelance';
+        }
+
+        if (d === 'In-house (employee at a brand/company)') {
+          d = 'In-house (brand/company)';
+        }
+
+        if (d === 'In-house (at NGO, non-profit, or government)') {
+          d = 'In-house (other)';
+        }
+
+        if (d === 'Partnership (shared ownership)') {
+          d = 'Partnership';
+        }
+
+        if (d === 'Studio (employee at small organization, 3\u201310)') {
+          d = 'Studio (small organization)';
+        }
+
+        if (d === 'Design, environmental graphics') {
+          d = 'Design, environmental';
+        }
+
+        if (d === 'Junior Designer, digital and print') {
+          d = 'Jr. Designer, digital/print';
+        }
+
+        if (d === 'Owner, Partner, or Principal') {
+          d = 'Owner/Partner/Principal';
+        }
+
+        if (d === 'Project Manager, digital and print') {
+          d = 'Project Mgr., digital/print';
+        }
+
+        if (d === 'Self-employed (no employees)') {
+          d = 'Self-employed';
+        }
+
+        if (d === 'Senior Designer, digital and print') {
+          d = 'Sr. Designer, digital/print';
+        }
+
+        if (d === 'User Experience (UX) Designer') {
+          d = 'UX Designer';
+        }
+
+        if (d === 'Technical degree or certificate') {
+          d = 'Technical degree';
+        }
+
+        if (d === 'Community sharing (TED, Twitter, Instagram, etc)') {
+          d = 'Community sharing';
+        }
+
+        if (d === 'Online classes (Skillshare, Lynda.com, MOOCs, etc)') {
+          d = 'Online classes';
+        }
+
+        return d;
+      });
 
       ////////////////////////////////////////////////////////////
       // Part 3: draw chart items
