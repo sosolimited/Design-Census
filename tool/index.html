@@ -149,9 +149,8 @@
       questions = iQuestions;
       responses = iResponses;
 
-// debugger;
-console.log('Raw questions', questions)
-console.log('Raw responses', responses)
+      console.log('Raw questions', questions)
+      console.log('Raw responses', responses)
 
       var selectableQuestions = questions.filter(function(d){
         if (d.type === "range") {
@@ -165,7 +164,7 @@ console.log('Raw responses', responses)
         }
       });
 
-console.log('selectableQuestions', selectableQuestions)
+      // console.log('selectableQuestions', selectableQuestions)
 
       // Initially setup HTML elements.
       setupHTML(selectableQuestions);
@@ -211,8 +210,8 @@ console.log('selectableQuestions', selectableQuestions)
 
       updateSaveCsvData();
 
-// console.log("domainRadius", domainRadius)
-console.log('-updateGraph -curResponseData', curResponseData)
+      // console.log("domainRadius", domainRadius)
+      console.log('-updateGraph -curResponseData', curResponseData)
 
       ////////////////////////////////////////////////////////////
       // Part 2: create chart variables
@@ -252,11 +251,6 @@ console.log('-updateGraph -curResponseData', curResponseData)
 
       var xAxis = d3.svg.axis().scale(xScale).orient('bottom').tickFormat(formatAxisTickLabel);
       var yAxis = d3.svg.axis().scale(yScale).orient('left').tickFormat(formatAxisTickLabel);
-
-console.log(xScale.domain())
-console.log(xScale.range())
-console.log(yScale.domain())
-console.log(yScale.range())
 
       ////////////////////////////////////////////////////////////
       // Part 3: draw chart items
@@ -371,19 +365,13 @@ console.log(yScale.range())
     function getQuestionDomain(iQuestionNum) {
 
       var result = [];
-
       var curQuestion = _.find(questions, {'question': iQuestionNum});
-
-debugger;
 
       if (curQuestion.type === 'choice') {
         result = _.map(curQuestion.attributes.question_choice_options, 'title');
       } else if (curQuestion.type === 'range') {
         result = [curQuestion.attributes.min, curQuestion.attributes.max];
       } else if (curQuestion.type === 'text') {
-
-debugger;
-
         // Manually set domain for salary questions, since there is no max/min provided in the questions JSON file.
         if (Number(iQuestionNum) === 20.1) {
           result = [0, 1000000];
@@ -393,8 +381,6 @@ debugger;
       } else {
         console.error('getQuestionDomain- Cannot retrieve data domain for Question #'+ iQuestionNum);
       }
-
-debugger;
 
       return result;
 
@@ -418,15 +404,11 @@ debugger;
         "enable_plus": (q2.attributes.enable_plus || (Number(iQuestionNum2) === 20.1 || Number(iQuestionNum2) === 20.2 ? true : false)) || false
       };
 
-// debugger;
-
       ////////////////////////////////////////////////////////////
       // Part 1: combine questions into x,y pairs.
       ////////////////////////////////////////////////////////////
 
       _.forEach(responses, function(response) {
-
-// debugger;
 
         var curResult = {};
 
@@ -496,11 +478,7 @@ debugger;
         "enable_plus": (q2.attributes.enable_plus || (Number(iQuestionNum2) === 20.1 || Number(iQuestionNum2) === 20.2 ? true : false)) || false
       };
 
-debugger;
-
       _.forEach(responses, function(response) {
-
-// debugger;
 
         var curResult = {};
 
@@ -538,8 +516,6 @@ debugger;
 
       });
 
-debugger;
-
       return result;
 
     }
@@ -558,8 +534,6 @@ debugger;
         }
       }
       result = Number(result);
-
-// debugger;
 
       return result;
 
