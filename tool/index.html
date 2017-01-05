@@ -154,10 +154,18 @@ console.log('Raw questions', questions)
 console.log('Raw responses', responses)
 
       var selectableQuestions = questions.filter(function(d){
-        if (d.type === "range") { return true; }
-        else if (d.type === "choice" && d.attributes.allow_multiple === false) { return true; }
-        else { return false; }
+        if (d.type === "range") {
+          return true;
+        } else if (d.type === "choice" && d.attributes.allow_multiple === false) {
+          return true;
+        } else if (Number(d.question) === 20.1 || Number(d.question) === 20.2) {
+          return true;
+        } else {
+          return false;
+        }
       });
+
+console.log('selectableQuestions', selectableQuestions)
 
       // Initially setup HTML elements.
       setupHTML(selectableQuestions);
@@ -204,7 +212,6 @@ console.log('Raw responses', responses)
       updateSaveCsvData();
 
 // console.log("domainRadius", domainRadius)
-// debugger;
 console.log('-updateGraph -curResponseData', curResponseData)
 
       ////////////////////////////////////////////////////////////
@@ -214,23 +221,29 @@ console.log('-updateGraph -curResponseData', curResponseData)
       var xScale, yScale, radiusScale;
       switch (curQuestion1.type) {
         case 'range':
-        xScale = d3.scale.linear().range([0, width]);
-        break;
+          xScale = d3.scale.linear().range([0, width]);
+          break;
         case 'choice':
-        xScale = d3.scale.ordinal().rangeRoundPoints([0, width]);
-        break;
+          xScale = d3.scale.ordinal().rangeRoundPoints([0, width]);
+          break;
+        case 'text':
+          xScale = d3.scale.linear().range([0, width]);
+          break;
         default:
-        console.error("Unable to choose proper d3.scale for the Question 1's type.")
+          console.error("Unable to choose proper d3.scale for the Question 1's type.")
       }
       switch (curQuestion2.type) {
         case 'range':
-        yScale = d3.scale.linear().range([height, 0]);
-        break;
+          yScale = d3.scale.linear().range([height, 0]);
+          break;
         case 'choice':
-        yScale = d3.scale.ordinal().rangeRoundPoints([height, 0]);
-        break;
+          yScale = d3.scale.ordinal().rangeRoundPoints([height, 0]);
+          break;
+        case 'text':
+          xScale = d3.scale.linear().range([0, width]);
+          break;
         default:
-        console.error("Unable to choose proper d3.scale for the Question 2's type.")
+          console.error("Unable to choose proper d3.scale for the Question 2's type.")
       }
       xScale.domain(domainQ1);
       yScale.domain(domainQ2);
@@ -239,6 +252,11 @@ console.log('-updateGraph -curResponseData', curResponseData)
 
       var xAxis = d3.svg.axis().scale(xScale).orient('bottom').tickFormat(formatAxisTickLabel);
       var yAxis = d3.svg.axis().scale(yScale).orient('left').tickFormat(formatAxisTickLabel);
+
+console.log(xScale.domain())
+console.log(xScale.range())
+console.log(yScale.domain())
+console.log(yScale.range())
 
       ////////////////////////////////////////////////////////////
       // Part 3: draw chart items
@@ -358,6 +376,15 @@ console.log('-updateGraph -curResponseData', curResponseData)
         result = _.map(curQuestion.attributes.question_choice_options, 'title');
       } else if (curQuestion.type === 'range') {
         result = [curQuestion.attributes.min, curQuestion.attributes.max];
+      } else if (curQuestion.type === 'text') {
+        // Manully set domain for salary questions, since there is no max/min provided in the questions JSON file.
+        if (Number(iQuestionNum) === 20.1) {
+          result = [0, 1000000];
+        } else if (Number(iQuestionNum) === 20.2) {
+          result = [0, 1000];
+        }
+      } else {
+        console.error('getQuestionDomain- Cannot retrieve data domain for Question #'+ iQuestionNum);
       }
 
       return result;
@@ -374,11 +401,13 @@ console.log('-updateGraph -curResponseData', curResponseData)
       var q1Type = q1.type;
       var q2Type = q2.type;
       var q1Attr = {
-        "enable_plus": q1.attributes.enable_plus || false
+        "enable_plus": (q1.attributes.enable_plus || (Number(iQuestionNum1) === 20.1 || Number(iQuestionNum1) === 20.2 ? true : false)) || false       // 'enable_plus' means the max value in range can have a + (ex: '1000+') which needs to be treated.
       };
       var q2Attr = {
-        "enable_plus": q2.attributes.enable_plus || false
+        "enable_plus": (q2.attributes.enable_plus || (Number(iQuestionNum2) === 20.1 || Number(iQuestionNum2) === 20.2 ? true : false)) || false
       };
+
+debugger;
 
       ////////////////////////////////////////////////////////////
       // Part 1: combine questions into x,y pairs.
@@ -395,7 +424,7 @@ console.log('-updateGraph -curResponseData', curResponseData)
           // X
           if (Number(question.split('-')[0]) === Number(iQuestionNum1)) {
             if (responseVal !== '' && responseVal !== undefined) {
-              if (q1Type === 'range') {
+              if (q1Type === 'range' || q1Type === 'text') {
                 responseVal = formatRangeValue(responseVal, q1Attr);
               } else if (q1Type === 'choice') {
                 responseVal = formatChoiceValue(responseVal);
@@ -406,7 +435,7 @@ console.log('-updateGraph -curResponseData', curResponseData)
           // Y
           if (Number(question.split('-')[0]) === Number(iQuestionNum2)) {
             if (responseVal !== '' && responseVal !== undefined) {
-              if (q2Type === 'range') {
+              if (q2Type === 'range' || q2Type === 'text') {
                 responseVal = formatRangeValue(responseVal, q2Attr);
               } else if (q2Type === 'choice') {
                 responseVal = formatChoiceValue(responseVal);
@@ -450,24 +479,26 @@ console.log('-updateGraph -curResponseData', curResponseData)
       var q1Type = q1.type;
       var q2Type = q2.type;
       var q1Attr = {
-        "enable_plus": q1.attributes.enable_plus || false       // 'enable_plus' means the max value in range can have a + (ex: '1000+') which needs to be treated.
+        "enable_plus": (q1.attributes.enable_plus || (Number(iQuestionNum1) === 20.1 || Number(iQuestionNum1) === 20.2 ? true : false)) || false       // 'enable_plus' means the max value in range can have a + (ex: '1000+') which needs to be treated.
       };
       var q2Attr = {
-        "enable_plus": q2.attributes.enable_plus || false
+        "enable_plus": (q2.attributes.enable_plus || (Number(iQuestionNum2) === 20.1 || Number(iQuestionNum2) === 20.2 ? true : false)) || false
       };
+
+debugger;
 
       _.forEach(responses, function(response) {
 
 // debugger;
 
-var curResult = {};
+        var curResult = {};
 
-_.forOwn(response, function(responseVal, question){
+        _.forOwn(response, function(responseVal, question){
 
           // X
           if (Number(question.split('-')[0]) === Number(iQuestionNum1)) {
             if (responseVal !== '' && responseVal !== undefined) {
-              if (q1Type === 'range') {
+              if (q1Type === 'range' || q1Type === 'text') {
                 responseVal = formatRangeValue(responseVal, q1Attr);
               } else if (q1Type === 'choice') {
                 responseVal = formatChoiceValue(responseVal);
@@ -478,7 +509,7 @@ _.forOwn(response, function(responseVal, question){
           // Y
           if (Number(question.split('-')[0]) === Number(iQuestionNum2)) {
             if (responseVal !== '' && responseVal !== undefined) {
-              if (q2Type === 'range') {
+              if (q2Type === 'range' || q2Type === 'text') {
                 responseVal = formatRangeValue(responseVal, q2Attr);
               } else if (q2Type === 'choice') {
                 responseVal = formatChoiceValue(responseVal);
@@ -495,6 +526,8 @@ _.forOwn(response, function(responseVal, question){
         }
 
       });
+
+debugger;
 
       return result;
 
@@ -514,6 +547,8 @@ _.forOwn(response, function(responseVal, question){
         }
       }
       result = Number(result);
+
+debugger;
 
       return result;
 
