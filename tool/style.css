@@ -158,15 +158,31 @@
   }
   @media (min-width: 1024px) {
    #graph-area {
+     display: block;
+  }
+  #viz-loader {
     display: block;
+    width: 300px;
+    margin: 0 auto;
+    text-align: center;
+    z-index: 100;
+    position: relative;
   }
 }
 @media (max-width: 1023px) {
  #graph-area {
-  display: none;
+   display: none;
 }
+  #viz-loader {
+    display: none;
+  }
 }
 
+#dropdown-viz {
+  display: none;
+  background-color: #f5f5f6;
+      margin-top: -100px;
+}
 
 
 /* Legend styles */
@@ -316,11 +332,6 @@ h2 a {
 
 }
 
-
-
-#graph-area {
-  position: absolute;
-}
 
 @media (max-width: 399px) {
   img.large {
