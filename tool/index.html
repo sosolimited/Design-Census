@@ -12,9 +12,9 @@
 
   <title>Design Census Data Explorer</title>
 
-  <link href="dist/css/bootstrap.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link href="dist/css/bootstrap.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
@@ -36,18 +36,18 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="https://www.sosolimited.com/" style="float:left"><img class="large" style="max-width:129px;height:auto" src="assets/SOSOlogoVector-red@2x.png"><img class="small" style="max-width:50px;height:auto" src="assets/SOSOlogoVectorShort-red@2x.png"></a>
+          <a class="navbar-brand" href="https://www.sosolimited.com/" style="float:left"><img class="large" style="max-width:129px;height:auto" src="assets/SOSOlogoVector1@2x.png"><img class="small" style="max-width:50px;height:auto" src="assets/SOSOlogoVector2@2x.png"></a>
           <li style="float:right; border-bottom: 3px solid #2a2b2c; list-style-type: none" class="h4">Design Census Data Explorer</li>
         </div>
         <div id="navbar" class="collapse navbar-collapse" style="float:right">
           <ul class="nav navbar-nav">
-            <li style="border-bottom: 3px solid #FCC006" class="h4"><div id="save-csv"><a download="aiga_data.csv" href="" target="_blank">Save selection to CSV</a></div></li>
-            <li style="border-bottom: 3px solid #3BADE5" class="h4"><div><a href="https://github.com/sosolimited/Design-Census" target="_blank">Download code on GitHub</a></div></li>
+            <li style="border-bottom: 3px solid #575dc5" class="h4"><div id="save-csv"><a download="aiga_data.csv" href="" target="_blank">Save selection to CSV</a></div></li>
+            <li style="border-bottom: 3px solid #575dc5" class="h4"><div><a href="https://github.com/sosolimited/Design-Census" target="_blank">Download code on GitHub</a></div></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </div>
-  </nav>
+  </nav><!-- .navbar -->
 
   <div class="allContent">
 
@@ -58,15 +58,31 @@
     </div>
 
     <div class="container">
+
       <div id="about-text">
-        <h2 style="color:#2A2B2C">The Design Census Data Explorer is a tool that shows patterns and trends in the <a href="http://designcensus.org/#!/">2016 AIGA Design Census</a>. With nearly 10,000 responses from across the nation, there are many stories and surprises to be revealed within the data. Find a compelling combination? Download your discoveries to a CSV file and create a visualization of your own. </h2>
-        <h2 style="color:#2A2B2C">This tool was created by <a href="https://www.sosolimited.com/">Sosolimited</a>, an art, design, and technology studio and the official data visualization partner of the 2016 Design Census.</h2>
+        <h2 style="color:#2A2B2C">How does a designer’s education level correlate with her annual salary? How are designers in different industries learning new skills?</h2>
+        <h2 style="color:#2A2B2C">Use this tool to hunt for patterns and trends in the <a href="http://designcensus.org/#!/">2016 AIGA Design Census</a> data. Find a compelling correlation and download the data to create a visualization of your own.</h2>
       </div>
+
+      <div class="container">
+        <div id="footer-text-box-mobile">
+          <h2 class="footer-text" style="color:#2A2B2C">The Data Explorer was created by <a href="https://www.sosolimited.com/">Sosolimited</a>, an art, design, and technology studio and data visualization partner of the 2016 Design Census.</h2>
+        </div>
+      </div>
+
+      <!-- <div class="container">
+        <div id="about-text">
+          <h2 style="color:#2A2B2C">The Design Census Data Explorer is a tool that shows patterns and trends in the <a href="http://designcensus.org/#!/">2016 AIGA Design Census</a>. With nearly 10,000 responses from across the nation, there are many stories and surprises to be revealed within the data. Find a compelling combination? Download your discoveries to a CSV file and create a visualization of your own. </h2>
+          <h2 style="color:#2A2B2C">This tool was created by <a href="https://www.sosolimited.com/">Sosolimited</a>, an art, design, and technology studio and the official data visualization partner of the 2016 Design Census.</h2>
+      </div> -->
+
       <br/><br/>
+
       <div id="viz-loader">
-      <h2 style="color:#a5a4a0">Loading visualization...</h2>
+        <h2 style="color:#a5a4a0">Loading visualization...</h2>
       </div>
-    </div>
+
+    </div><!-- .container -->
 
     <div id="dropdown-viz">
       <div class="container">
@@ -88,6 +104,13 @@
       <div class="container">
         <div id="graph-area"></div>
       </div>
+    </div><!-- #dropdown-viz -->
+
+  </div><!-- .allContent -->
+
+  <div class="container">
+    <div id="footer-text-box">
+      <h2 class="footer-text" style="color:#2A2B2C">The Data Explorer was created by <a href="https://www.sosolimited.com/">Sosolimited</a>, an art, design, and technology studio and data visualization partner of the 2016 Design Census.</h2>
     </div>
   </div>
 
@@ -270,7 +293,7 @@
           .attr('r', function(d){ return radiusScale(d.count); })   // radius
           .attr('cx', function(d){ return xScale(d.x); })   // center-x position
           .attr('cy', function(d){ return yScale(d.y); })   // center-y position
-          .style('fill', '#F75434')       // inject CSS directly using .style()
+          .style('fill', '#36c1ab')       // inject CSS directly using .style()
           .attr('fill-opacity', 0.45) // this is an attribute, not a CSS property, but it might work in CSS too.
           // Hover action for circles.
           .on("mouseover", function(d) {
