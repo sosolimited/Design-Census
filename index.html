@@ -206,208 +206,246 @@
       console.log('-updateGraph('+iQuestionNum1+', '+iQuestionNum2+')')
 
       ////////////////////////////////////////////////////////////
+      // Part 0: show loading message until data is ready
+      ////////////////////////////////////////////////////////////
+
+      if (svg.select('g').empty()) {
+        update();
+      } else {
+        var transitions = 0;
+        svg.selectAll('.dot')
+          .transition()
+            .duration(500)
+            .attr('fill-opacity', 0)
+            .each( "start", function() {
+              transitions++;
+            })
+            .each( "end", function() {
+              if( --transitions === 0 ) {
+                svg.append('text')
+                    .attr('class', 'h2')
+                    .attr('x', width/2)
+                    .attr('y', height/2)
+                    .attr('opacity', 0)
+                    .style({'text-anchor':'middle', 'fill':'#a5a4a0'})
+                    .text('Loading...')
+                  .transition()
+                    .duration(500)
+                    .attr('opacity', 1)
+                    .each('end', function(){
+                      update();
+                    })
+              }
+            });
+      }
+
+      ////////////////////////////////////////////////////////////
       // Part 1: prepare data
       ////////////////////////////////////////////////////////////
 
-      // Get data for provided questions.
-      curQuestion1 = _.find(questions, {'question': iQuestionNum1});
-      curQuestion2 = _.find(questions, {'question': iQuestionNum2});
-      curResponseData = getResponseDataV2(iQuestionNum1, iQuestionNum2);
-      var domainQ1 = getQuestionDomain(iQuestionNum1);
-      var domainQ2 = getQuestionDomain(iQuestionNum2);
-      var domainRadius = [1, (_.maxBy(curResponseData, 'count').count)];
-      var rangeRadius = [1.5, 40.5];    // min & max radius for the circles.
+      function update() {
 
-      updateSaveCsvData();
+        // Get data for provided questions.
+        curQuestion1 = _.find(questions, {'question': iQuestionNum1});
+        curQuestion2 = _.find(questions, {'question': iQuestionNum2});
+        curResponseData = getResponseDataV2(iQuestionNum1, iQuestionNum2);
+        var domainQ1 = getQuestionDomain(iQuestionNum1);
+        var domainQ2 = getQuestionDomain(iQuestionNum2);
+        var domainRadius = [1, (_.maxBy(curResponseData, 'count').count)];
+        var rangeRadius = [1.5, 40.5];    // min & max radius for the circles.
 
-      // console.log("domainRadius", domainRadius)
-      console.log('-updateGraph -curResponseData', curResponseData)
+        updateSaveCsvData();
 
-      ////////////////////////////////////////////////////////////
-      // Part 2: create chart variables
-      ////////////////////////////////////////////////////////////
+        // console.log("domainRadius", domainRadius)
+        console.log('-updateGraph -curResponseData', curResponseData)
 
-      var xScale, yScale, radiusScale;
-      switch (curQuestion1.type) {
-        case 'range':
-          xScale = d3.scale.linear().range([0, width]);
-          break;
-        case 'choice':
-          xScale = d3.scale.ordinal().rangeRoundPoints([0, width]);
-          break;
-        // Using 'text' to affect salary questions.
-        case 'text':
-          xScale = d3.scale.linear().range([0, width]).clamp(true);
-          break;
-        default:
-          console.error("Unable to choose proper d3.scale for the Question 1's type.")
-      }
-      switch (curQuestion2.type) {
-        case 'range':
-          yScale = d3.scale.linear().range([height, 0]);
-          break;
-        case 'choice':
-          yScale = d3.scale.ordinal().rangeRoundPoints([height, 0]);
-          break;
-        // Using 'text' to affect salary questions.
-        case 'text':
-          yScale = d3.scale.linear().range([height, 0]).clamp(true);
-          break;
-        default:
-          console.error("Unable to choose proper d3.scale for the Question 2's type.")
-      }
-      xScale.domain(domainQ1);
-      yScale.domain(domainQ2);
-      // Use a square root scale to calculate proper radius for a linear area scale.
-      radiusScale = d3.scale.pow().exponent(.5).range(rangeRadius).domain(domainRadius);
+        ////////////////////////////////////////////////////////////
+        // Part 2: create chart variables
+        ////////////////////////////////////////////////////////////
 
-      var xAxis = d3.svg.axis().scale(xScale).orient('bottom').tickFormat(formatAxisTickLabel);
-      var yAxis = d3.svg.axis().scale(yScale).orient('left').tickFormat(formatAxisTickLabel);
-
-      ////////////////////////////////////////////////////////////
-      // Part 3: draw chart items
-      ////////////////////////////////////////////////////////////
-
-      // Delete previous chart, start from scratch.
-      $(svg.node()).empty();
-
-      // Draw circles
-      svg.selectAll('.dot')
-      .data(curResponseData)
-      .enter().append('circle')
-          .attr('class', 'dot')       // add any number of CSS classes for styling
-          .attr('r', function(d){ return radiusScale(d.count); })   // radius
-          .attr('cx', function(d){ return xScale(d.x); })   // center-x position
-          .attr('cy', function(d){ return yScale(d.y); })   // center-y position
-          .style('fill', '#36c1ab')       // inject CSS directly using .style()
-          .attr('fill-opacity', 0.45) // this is an attribute, not a CSS property, but it might work in CSS too.
-          // Hover action for circles.
-          .on("mouseover", function(d) {
-            divTooltip.transition()
-            .duration(200)
-            .style("opacity", .9);
-            divTooltip
-            .html("x: " + d.x + "<br/>y: " + d.y + "<br/>count: " + d.count)
-            .style("left", (d3.event.pageX + 15) + "px")
-            .style("top", (d3.event.pageY + 0) + "px");
-            $(this)
-            .addClass('hovered');
-          })
-          .on("mouseout", function(d) {
-            divTooltip.transition()
-            .duration(500)
-            .style("opacity", 0);
-            $(this)
-            .removeClass('hovered')
-          });
-
-      // Draw axes after circles, so they are layered above them.
-      // Draw X axis
-      svg.append('g')
-      .attr('class', 'x axis')
-      .attr('transform', 'translate(0,'+ height +')')
-      .call(xAxis)
-      .call(tickModifier)
-      .append('text')
-      .attr('class', 'axis-label-x')
-      .attr('x', width/2)
-      .attr('y', function(d){
-        if (curQuestion1.type === 'choice') {
-          return 150;
-        } else {
-          return 70;
+        var xScale, yScale, radiusScale;
+        switch (curQuestion1.type) {
+          case 'range':
+            xScale = d3.scale.linear().range([0, width]);
+            break;
+          case 'choice':
+            xScale = d3.scale.ordinal().rangeRoundPoints([0, width]);
+            break;
+          // Using 'text' to affect salary questions.
+          case 'text':
+            xScale = d3.scale.linear().range([0, width]).clamp(true);
+            break;
+          default:
+            console.error("Unable to choose proper d3.scale for the Question 1's type.")
         }
-      })
-      .style('text-anchor', 'middle')
-      .text(curQuestion1.attributes.short_short_title);
-
-      // Draw Y axis
-      svg.append('g')
-      .attr('class', 'y axis')
-      .call(yAxis)
-      .call(tickModifier)
-      .append('text')
-      .attr('class', 'axis-label-y')
-      .attr('transform', 'rotate(-90)')
-      .attr('x', -height/2)
-      .attr('y', function(d){
-        if (curQuestion2.type === 'choice') {
-          return -200;
-        } else {
-          return -100;
+        switch (curQuestion2.type) {
+          case 'range':
+            yScale = d3.scale.linear().range([height, 0]);
+            break;
+          case 'choice':
+            yScale = d3.scale.ordinal().rangeRoundPoints([height, 0]);
+            break;
+          // Using 'text' to affect salary questions.
+          case 'text':
+            yScale = d3.scale.linear().range([height, 0]).clamp(true);
+            break;
+          default:
+            console.error("Unable to choose proper d3.scale for the Question 2's type.")
         }
-      })
-      .attr('dy', '.71em')
-      .style('text-anchor', 'middle')
-      .text(curQuestion2.attributes.short_short_title);
+        xScale.domain(domainQ1);
+        yScale.domain(domainQ2);
+        // Use a square root scale to calculate proper radius for a linear area scale.
+        radiusScale = d3.scale.pow().exponent(.5).range(rangeRadius).domain(domainRadius);
 
-      postTickCreation();
+        var xAxis = d3.svg.axis().scale(xScale).orient('bottom').tickFormat(formatAxisTickLabel);
+        var yAxis = d3.svg.axis().scale(yScale).orient('left').tickFormat(formatAxisTickLabel);
 
-      // Modify default appearance of ticks on the axes.
-      function tickModifier() {
+        ////////////////////////////////////////////////////////////
+        // Part 3: draw chart items
+        ////////////////////////////////////////////////////////////
 
-        // Move X ticks away from axis, for numbers and sideways text ticks.
-        var xTicks = d3.selectAll('.x .tick').select('text');
-        xTicks
-        .attr('x', '0')
-        .attr('y', '2rem')
-        .attr('dy', '0rem')
-        .style('text-anchor', 'middle');
-        if (curQuestion1.type === 'choice') {
+        // Delete previous chart, start from scratch.
+        $(svg.node()).empty();
+
+        // Draw circles
+        svg.selectAll('.dot')
+        .data(curResponseData)
+        .enter().append('circle')
+            .attr('class', 'dot')       // add any number of CSS classes for styling
+            .attr('r', function(d){ return radiusScale(d.count); })   // radius
+            .attr('cx', function(d){ return xScale(d.x); })   // center-x position
+            .attr('cy', function(d){ return yScale(d.y); })   // center-y position
+            .style('fill', '#36c1ab')       // inject CSS directly using .style()
+            .attr('fill-opacity', 0.45) // this is an attribute, not a CSS property, but it might work in CSS too.
+            // Hover action for circles.
+            .on("mouseover", function(d) {
+              divTooltip.transition()
+              .duration(200)
+              .style("opacity", .9);
+              divTooltip
+              .html("x: " + d.x + "<br/>y: " + d.y + "<br/>count: " + d.count)
+              .style("left", (d3.event.pageX + 15) + "px")
+              .style("top", (d3.event.pageY + 0) + "px");
+              $(this)
+              .addClass('hovered');
+            })
+            .on("mouseout", function(d) {
+              divTooltip.transition()
+              .duration(500)
+              .style("opacity", 0);
+              $(this)
+              .removeClass('hovered')
+            });
+
+        // Draw axes after circles, so they are layered above them.
+        // Draw X axis
+        svg.append('g')
+        .attr('class', 'x axis')
+        .attr('transform', 'translate(0,'+ height +')')
+        .call(xAxis)
+        .call(tickModifier)
+        .append('text')
+        .attr('class', 'axis-label-x')
+        .attr('x', width/2)
+        .attr('y', function(d){
+          if (curQuestion1.type === 'choice') {
+            return 150;
+          } else {
+            return 70;
+          }
+        })
+        .style('text-anchor', 'middle')
+        .text(curQuestion1.attributes.short_short_title);
+
+        // Draw Y axis
+        svg.append('g')
+        .attr('class', 'y axis')
+        .call(yAxis)
+        .call(tickModifier)
+        .append('text')
+        .attr('class', 'axis-label-y')
+        .attr('transform', 'rotate(-90)')
+        .attr('x', -height/2)
+        .attr('y', function(d){
+          if (curQuestion2.type === 'choice') {
+            return -200;
+          } else {
+            return -100;
+          }
+        })
+        .attr('dy', '.71em')
+        .style('text-anchor', 'middle')
+        .text(curQuestion2.attributes.short_short_title);
+
+        postTickCreation();
+
+        // Modify default appearance of ticks on the axes.
+        function tickModifier() {
+
+          // Move X ticks away from axis, for numbers and sideways text ticks.
+          var xTicks = d3.selectAll('.x .tick').select('text');
           xTicks
+          .attr('x', '0')
+          .attr('y', '2rem')
+          .attr('dy', '0rem')
+          .style('text-anchor', 'middle');
+          if (curQuestion1.type === 'choice') {
+            xTicks
+            .attr('x', '-1rem')
+            .attr('y', '1rem')
+            .attr('transform', 'rotate(-45)')
+            .style('text-anchor', 'end');
+
+          }
+
+          // Move Y ticks aways from axis.
+          var yTicks = d3.selectAll('.y .tick').select('text');
+          yTicks
           .attr('x', '-1rem')
-          .attr('y', '1rem')
-          .attr('transform', 'rotate(-45)')
+          .attr('width', '100')
           .style('text-anchor', 'end');
 
-        }
-
-        // Move Y ticks aways from axis.
-        var yTicks = d3.selectAll('.y .tick').select('text');
-        yTicks
-        .attr('x', '-1rem')
-        .attr('width', '100')
-        .style('text-anchor', 'end');
-
-        // Make axis tick font-size smaller for certain questions.
-        var questionsWithSmallText = [3, 4, 35];
-        var questionsWithSmallerText = [8];
-        if (_.includes(questionsWithSmallerText, Number(iQuestionNum1))) {
-          setSmallTickSize('x', 'smaller');
-        } else if (_.includes(questionsWithSmallText, Number(iQuestionNum1))) {
-          setSmallTickSize('x', 'small');
-        }
-        if (_.includes(questionsWithSmallerText, Number(iQuestionNum2))) {
-          setSmallTickSize('y', 'smaller');
-        } else if (_.includes(questionsWithSmallText, Number(iQuestionNum2))) {
-          setSmallTickSize('y', 'small');
-        }
-        function setSmallTickSize(iAxis, iClass) {
-          $('.'+ iAxis +' .tick text').addClass(iClass);
-        }
-
-      }
-
-      // For modifications to axis ticks after they've been created.
-      function postTickCreation() {
-
-        // For clamped scales, add a '+' to the end of the max tick label.
-        if (curQuestion1.type === 'text') {
-          if (xScale.clamp() === true) {
-            var s = svg.selectAll('.x .tick text').last();
-            var t = s.text();
-            s.text(t + '+');
+          // Make axis tick font-size smaller for certain questions.
+          var questionsWithSmallText = [3, 4, 35];
+          var questionsWithSmallerText = [8];
+          if (_.includes(questionsWithSmallerText, Number(iQuestionNum1))) {
+            setSmallTickSize('x', 'smaller');
+          } else if (_.includes(questionsWithSmallText, Number(iQuestionNum1))) {
+            setSmallTickSize('x', 'small');
           }
-        }
-        if (curQuestion2.type === 'text') {
-          if (yScale.clamp() === true) {
-            var s = svg.selectAll('.y .tick text').last();
-            var t = s.text();
-            s.text(t + '+');
+          if (_.includes(questionsWithSmallerText, Number(iQuestionNum2))) {
+            setSmallTickSize('y', 'smaller');
+          } else if (_.includes(questionsWithSmallText, Number(iQuestionNum2))) {
+            setSmallTickSize('y', 'small');
           }
+          function setSmallTickSize(iAxis, iClass) {
+            $('.'+ iAxis +' .tick text').addClass(iClass);
+          }
+
         }
 
-      }
+        // For modifications to axis ticks after they've been created.
+        function postTickCreation() {
+
+          // For clamped scales, add a '+' to the end of the max tick label.
+          if (curQuestion1.type === 'text') {
+            if (xScale.clamp() === true) {
+              var s = svg.selectAll('.x .tick text').last();
+              var t = s.text();
+              s.text(t + '+');
+            }
+          }
+          if (curQuestion2.type === 'text') {
+            if (yScale.clamp() === true) {
+              var s = svg.selectAll('.y .tick text').last();
+              var t = s.text();
+              s.text(t + '+');
+            }
+          }
+
+        }
+
+      }// end of update()
 
     }
 
