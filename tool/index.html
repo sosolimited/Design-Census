@@ -107,15 +107,15 @@
 <script>
 
   var questions = undefined,
-  responses = undefined,
-        // Margins around graph.
-        margin = {top: 50, right: 0, bottom: 360, left: 200},
-        // Width & height of graph.
-        width = 950 - margin.left - margin.right,
-        height = 950 - margin.top - margin.bottom,
-        curQuestion1 = undefined,
-        curQuestion2 = undefined,
-        curResponseData = undefined;
+      responses = undefined,
+      // Margins around graph.
+      margin = {top: 50, right: 0, bottom: 200, left: 200},
+      // Width & height of graph.
+      width = 950 - margin.left - margin.right,
+      height = 950 - margin.top - margin.bottom,
+      curQuestion1 = undefined,
+      curQuestion2 = undefined,
+      curResponseData = undefined;
 
     // Define the div for the tooltip
     var divTooltip = d3.select("body").append("div")
@@ -303,7 +303,7 @@
         if (curQuestion1.type === 'choice') {
           return 150;
         } else {
-          return 60;
+          return 70;
         }
       })
       .style('text-anchor', 'middle')
@@ -322,7 +322,7 @@
         if (curQuestion2.type === 'choice') {
           return -200;
         } else {
-          return -65;
+          return -100;
         }
       })
       .attr('dy', '.71em')
