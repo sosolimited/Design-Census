@@ -176,8 +176,8 @@
     function setupHTML(iDropDownItems) {
 
       iDropDownItems.forEach(function(d, i) {
-        $('#data-selection-1').append('<option data-question-id='+ d.question +'>'+ d.attributes.slug +'</option>');
-        $('#data-selection-2').append('<option data-question-id='+ d.question +'>'+ d.attributes.slug +'</option>');
+        $('#data-selection-1').append('<option data-question-id='+ d.question +'>'+ d.attributes.short_short_title +'</option>');
+        $('#data-selection-2').append('<option data-question-id='+ d.question +'>'+ d.attributes.short_short_title +'</option>');
       });
 
       $("select").change(function() {
@@ -307,7 +307,7 @@
         }
       })
       .style('text-anchor', 'middle')
-      .text(curQuestion1.attributes.slug);
+      .text(curQuestion1.attributes.short_short_title);
 
       // Draw Y axis
       svg.append('g')
@@ -327,7 +327,7 @@
       })
       .attr('dy', '.71em')
       .style('text-anchor', 'middle')
-      .text(curQuestion2.attributes.slug);
+      .text(curQuestion2.attributes.short_short_title);
 
       // Modify default appearance of ticks on the axes.
       function tickModifier() {
