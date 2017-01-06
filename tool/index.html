@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8">
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
-  <script src="https://d3js.org/d3-queue.v3.min.js"></script>
 
-  <!--   copied from bootstrap -->
+  <!-- Bootstrap -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
@@ -16,27 +12,15 @@
 
   <title>Design Census Data Explorer</title>
 
-  <!-- Bootstrap core CSS -->
-  <link href="../../dist/css/bootstrap.css" rel="stylesheet">
-
-  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-  <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
-
-  <!-- Custom styles for this template -->
-  <link href="starter-template.css" rel="stylesheet">
-
-  <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-  <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-  <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+  <link href="dist/css/bootstrap.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="style.css">
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-
-  <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="style.css">
 
 </head>
 
@@ -107,41 +91,49 @@
     </div>
   </div>
 
-<script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+  <script src="https://d3js.org/d3-queue.v3.min.js"></script>
+  <script src="dist/js/bootstrap.min.js"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="docs/assets/js/ie10-viewport-bug-workaround.js"></script>
 
-  $(document).ready(function(){
-    $('#viz-loader').css('z-index', '-100');
-  })
-  $(document).ready(function(){
-    $('#dropdown-viz').delay(1000).fadeIn(500);
-  })
+  <script>
 
-  var questions = undefined,
-      responses = undefined,
-      // Margins around graph.
-      margin = {top: 50, right: 0, bottom: 160, left: 200},
-      // Width & height of graph.
-      width = 950 - margin.left - margin.right,
-      height = 950 - margin.top - margin.bottom,
-      curQuestion1 = undefined,
-      curQuestion2 = undefined,
-      curResponseData = undefined;
+    // Graph 'loading...' message.
+    $(document).ready(function(){
+      $('#viz-loader').css('z-index', '-100');
+    })
+    $(document).ready(function(){
+      $('#dropdown-viz').delay(1000).fadeIn(500);
+    })
+
+    var questions = undefined,
+        responses = undefined,
+        // Margins around graph.
+        margin = {top: 50, right: 0, bottom: 160, left: 200},
+        // Width & height of graph.
+        width = 950 - margin.left - margin.right,
+        height = 950 - margin.top - margin.bottom,
+        curQuestion1 = undefined,
+        curQuestion2 = undefined,
+        curResponseData = undefined;
 
     // Define the div for the tooltip
     var divTooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+      .attr("class", "tooltip")
+      .style("opacity", 0);
 
     // Create chart container group within SVG element.
     var svg = d3.select('#graph-area').append('svg')
-    .attr('width', width + margin.left + margin.right + 180)
-    .attr('height', height + margin.top + margin.bottom)
-    .append('g')
+      .attr('width', width + margin.left + margin.right + 180)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
         // TIP: svg groups ('g') can only be moved using transform-translate.
         .attr('transform', 'translate('+ margin.left +','+ margin.top +')');
 
     // Load CSV first to remove empty rows from it, then load JSON.
-    //d3.xhr('data/wco-responses-13dec2016-2.csv').get(function (err, response) {
     d3.xhr('data/PRODUCTION-us_cleaned.csv').get(function (err, response) {
 
       var dirtyCSV = response.responseText;
@@ -680,57 +672,48 @@
     function getCSV(){
 
       if (curQuestion1 != undefined &&
-        curQuestion2 != undefined &&
-        curResponseData != undefined) {
+          curQuestion2 != undefined &&
+          curResponseData != undefined) {
 
         var csvQuestions = curQuestion1.attributes.slug + ", " + curQuestion2.attributes.slug + ", count";
-      var csvResponseData = curResponseData.map(function(row) {
-        return (row.x + ", " + row.y + ", " + row.count);
-      });
+        var csvResponseData = curResponseData.map(function(row) {
+          return (row.x + ", " + row.y + ", " + row.count);
+        });
 
-      var csv = csvQuestions + "\n" + csvResponseData.join("\n");
-      var result = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+        var csv = csvQuestions + "\n" + csvResponseData.join("\n");
+        var result = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
 
-      return result;
+        return result;
 
-    } else {
-      console.warn("Can't export CSV since data in undefined.")
+      } else {
+        console.warn("Can't export CSV since data in undefined.")
+      }
+
     }
 
-  }
+    // Helper functions.
+    $(function() {
 
-  // Helper functions.
-  $(function() {
+      var $body = $(document);
+      $body.bind('scroll', function() {
+          // "Disable" the horizontal scroll.
+          if ($body.scrollLeft() !== 0) {
+            $body.scrollLeft(0);
+          }
+        });
 
-    var $body = $(document);
-    $body.bind('scroll', function() {
-        // "Disable" the horizontal scroll.
-        if ($body.scrollLeft() !== 0) {
-          $body.scrollLeft(0);
-        }
-      });
+    });
 
-  });
+    d3.selection.prototype.first = function() {
+      return d3.select(this[0][0]);
+    };
 
-  d3.selection.prototype.first = function() {
-    return d3.select(this[0][0]);
-  };
+    d3.selection.prototype.last = function() {
+      var last = this.size() - 1;
+      return d3.select(this[0][last]);
+    };
 
-  d3.selection.prototype.last = function() {
-    var last = this.size() - 1;
-    return d3.select(this[0][last]);
-  };
-
-</script>
-
-  <!-- Bootstrap core JavaScript
-  ================================================== -->
-  <!-- Placed at the end of the document so the pages load faster -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-  <script src="../../dist/js/bootstrap.min.js"></script>
-  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-  <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+  </script>
 
 </body>
 </html>
