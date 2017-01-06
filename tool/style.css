@@ -165,6 +165,8 @@ body {
 @media (min-width: 1024px) {
  #graph-area {
     display: block;
+    margin-top: 1rem;
+    margin-bottom: 4rem;
   }
   #viz-loader {
     display: block;
