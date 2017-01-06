@@ -330,7 +330,7 @@
       .text(curQuestion2.attributes.slug);
 
       // Modify default appearance of ticks on the axes.
-      function tickModifier(iQuestionType) {
+      function tickModifier() {
 
         // Move X ticks away from axis, for numbers and sideways text ticks.
         var xTicks = d3.selectAll('.x .tick').select('text');
@@ -354,6 +354,24 @@
         .attr('x', '-1rem')
         .attr('width', '100')
         .style('text-anchor', 'end');
+
+        // Make axis tick font-size smaller for certain questions.
+        var questionsWithSmallText = [3, 4, 35];
+        var questionsWithSmallerText = [8];
+        if (_.includes(questionsWithSmallerText, Number(iQuestionNum1))) {
+          setSmallTickSize('x', 'smaller');
+        } else if (_.includes(questionsWithSmallText, Number(iQuestionNum1))) {
+          setSmallTickSize('x', 'small');
+        }
+        if (_.includes(questionsWithSmallerText, Number(iQuestionNum2))) {
+          setSmallTickSize('y', 'smaller');
+        } else if (_.includes(questionsWithSmallText, Number(iQuestionNum2))) {
+          setSmallTickSize('y', 'small');
+        }
+        function setSmallTickSize(iAxis, iClass) {
+          $('.'+ iAxis +' .tick text').addClass(iClass);
+        }
+
       }
 
     }

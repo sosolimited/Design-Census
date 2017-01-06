@@ -142,6 +142,13 @@
     fill: #2A2B2C;
   }
 
+  .axis .tick text.small {
+    font-size: 11px;
+  }
+
+  .axis .tick text.smaller {
+    font-size: 9px;
+  }
 
   .dot {
     stroke-width: 0.05rem;
