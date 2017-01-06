@@ -33,7 +33,7 @@
   <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
+    <![endif]-->
 
   <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="style.css">
@@ -79,32 +79,42 @@
         <h2 style="color:#2A2B2C">This tool was created by <a href="https://www.sosolimited.com/">Sosolimited</a>, an art, design, and technology studio and the official data visualization partner of the 2016 Design Census.</h2>
       </div>
       <br/><br/>
-    </div>
-
-    <div class="container">
-
-      <div id="dropdowns">
-        <div class="select-style x" style="float:left">
-          <select id="data-selection-1">
-            <option selected disabled>Select question for X axis</option>
-          </select>
-        </div>
-        <!-- <div class="x"><h2>×</h2></div> -->
-        <div class="select-style y" style="float:left">
-          <select id="data-selection-2">
-            <option selected disabled>Select question for Y axis</option>
-          </select>
-        </div>
+      <div id="viz-loader">
+      <h2 style="color:#a5a4a0">Loading visualization...</h2>
       </div>
-    </div><!-- /.container -->
-
-    <div class="container">
-      <div id="graph-area"></div>
     </div>
 
+    <div id="dropdown-viz">
+      <div class="container">
+        <div id="dropdowns">
+          <div class="select-style x" style="float:left">
+            <select id="data-selection-1">
+              <option selected disabled>Select question for X axis</option>
+            </select>
+          </div>
+          <!-- <div class="x"><h2>×</h2></div> -->
+          <div class="select-style y" style="float:left">
+            <select id="data-selection-2">
+              <option selected disabled>Select question for Y axis</option>
+            </select>
+          </div>
+        </div>
+      </div><!-- /.container -->
+
+      <div class="container">
+        <div id="graph-area"></div>
+      </div>
+    </div>
   </div>
 
 <script>
+
+  $(document).ready(function(){
+    $('#viz-loader').css('z-index', '-100');
+  })
+  $(document).ready(function(){
+    $('#dropdown-viz').delay(1000).fadeIn(500);
+  })
 
   var questions = undefined,
       responses = undefined,
