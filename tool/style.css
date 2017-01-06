@@ -1,173 +1,223 @@
-  <style>
 
+html {
+  font-size: 62.5%;     /* Brings it to 10px, since default is usually 16px. Makes 1rem = 10px. */
+}
 
-  body {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
-    color: black;
-    background-color: #FCC006;
-    text-align: left;
-    overflow-x:hidden;
-  }
+body {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  color: black;
+  /*background-color: #ff5946;*/
+  text-align: left;
+  overflow-x:hidden;
+}
 
-  @media (min-width: 1024px) {
-    #dropdowns {
-      display: block;
-      postion: relative;
-      margin-left: 129px;
-      padding-left: 6rem;
-      font-size:24px;
-      font-family: 'Poppins', sans-serif;
-      width: 100%;
-      margin-bottom: 5rem;
-      margin-top: 2rem;
-    }
-  }
-
-  @media (max-width: 1023px) {
-    #dropdowns {
-      display: none;
-    }
-  }
-
-  @media (max-width: 991px) {
-    #dropdowns {
-      postion: relative;
-      margin-left: 0;
-      padding-left: 0;
-      font-size:24px;
-      font-family: 'Poppins', sans-serif;
-    }
-  }
-
-
-  .select-style {
-    padding: 0;
-    margin-right: 30px;
-    margin-bottom: 7px;
-    width: 335px;
-    border-radius: 0px;
-    border: none;
-    overflow: hidden;
-    box-shadow: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-
-
-  }
-
-  .select-style.x select {
-    border-radius: 0px;
-    margin-right: 20px;
-    padding: 5px 0 0 0;
-    width: 385px;
-    border-bottom: 3px solid #3BADE5;
-    border-top: none;
-    border-right: none;
-    border-left: none;
-    box-shadow: none;
-    color: #2A2B2C;
-    background: transparent url("../assets/carrot3.png") no-repeat 86% 50%;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    text-transform: capitalize;
-
-
-  }
-
-
-  .select-style.y select {
-    border-radius: 0px;
-    margin-right: 20px;
-    padding: 5px 0 0 0;
-    width: 385px;
-    border-bottom: 3px solid #FCC006;
-    border-top: none;
-    border-right: none;
-    border-left: none;
-    box-shadow: none;
-    color: #2A2B2C;
-    background: transparent url("../assets/carrot3.png") no-repeat 86% 50%;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    text-transform: capitalize;
-
-  }
-
-  .select-style select:hover{
-    cursor: pointer;
-  }
-
-  .select-style select:focus {
-    outline: none;
-  }
-  /* Chart styles */
-
-  .axis path,
-  .axis line {
-    fill: none;
-    stroke: #2A2B2C;
-    shape-rendering: crispEdges;
-  }
-
-  .axis line {
-    margin-left: 10px;
-  }
-
-  .axis-label-x {
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 22px;
-    text-align: center;
-    text-transform: capitalize;
-    fill: #3BADE5;
-  }
-
-  .axis-label-y {
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 22px;
-    text-align: center;
-    text-transform: capitalize;
-    fill:#FCC006;
-  }
-
-  .axis .tick text {
-    font-size: 13px;
-    text-align: center;
-    position: absolute;
-    fill: #2A2B2C;
-  }
-
-
-  .dot {
-    stroke-width: 0.05rem;
-    stroke: none;
-  }
-
-  .dot:hover{
-    cursor: crosshair;
-  }
-
-  .dot.hovered {
-    stroke-width: 0.2rem;
-    stroke: #2A2B2C;
-  }
-  @media (min-width: 1024px) {
-   #graph-area {
+@media (min-width: 1024px) {
+  #dropdowns {
     display: block;
+    postion: relative;
+    margin-left: 129px;
+    padding-left: 6rem;
+    font-size:24px;
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+    margin-bottom: 5rem;
+    margin-top: 2rem;
   }
 }
+
 @media (max-width: 1023px) {
+  #dropdowns {
+    display: none;
+  }
+}
+
+@media (max-width: 991px) {
+  #dropdowns {
+    postion: relative;
+    margin-left: 0;
+    padding-left: 0;
+    font-size:24px;
+    font-family: 'Poppins', sans-serif;
+  }
+}
+
+.select-style {
+  padding: 0;
+  margin-right: 30px;
+  margin-bottom: 7px;
+  width: 335px;
+  border-radius: 0px;
+  border: none;
+  overflow: hidden;
+  box-shadow: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+
+}
+
+.select-style.x select {
+  border-radius: 0px;
+  margin-right: 20px;
+  padding: 5px 0 0 0;
+  width: 385px;
+  border-bottom: 3px solid #575dc5;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  box-shadow: none;
+  color: #1a1a1a;
+  background: transparent url("../assets/carrot3.png") no-repeat 86% 50%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  text-transform: capitalize;
+}
+
+.select-style.y select {
+  border-radius: 0px;
+  margin-right: 20px;
+  padding: 5px 0 0 0;
+  width: 385px;
+  border-bottom: 3px solid #ff5946;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  box-shadow: none;
+  color: #1a1a1a;
+  background: transparent url("../assets/carrot3.png") no-repeat 86% 50%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  text-transform: capitalize;
+
+}
+
+.select-style select:hover{
+  cursor: pointer;
+}
+
+.select-style select:focus {
+  outline: none;
+}
+/* Chart styles */
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #1a1a1a;
+  shape-rendering: crispEdges;
+}
+
+.axis line {
+  margin-left: 10px;
+}
+
+.axis-label-x {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: center;
+  text-transform: capitalize;
+  fill: #575dc5;
+}
+
+.axis-label-y {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: center;
+  text-transform: capitalize;
+  fill:#ff5946;
+}
+
+.axis .tick text {
+  font-size: 13px;
+  text-align: center;
+  position: absolute;
+  fill: #1a1a1a;
+}
+
+.axis .tick text.small {
+  font-size: 11px;
+}
+
+.axis .tick text.smaller {
+  font-size: 9px;
+}
+
+.dot {
+  stroke-width: 0.05rem;
+  stroke: none;
+}
+
+.dot:hover{
+  cursor: crosshair;
+}
+
+.dot.hovered {
+  stroke-width: 0.2rem;
+  stroke: #1a1a1a;
+}
+
+.footer-text {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 26px;
+  padding-top: 15px;
+  border-top: 3px solid #1a1a1a;
+}
+
+@media (min-width: 1024px) {
  #graph-area {
+  display: block;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+#viz-loader {
+  display: block;
+  width: 300px;
+  margin: 0 auto;
+  text-align: center;
+  z-index: 100;
+  position: relative;
+}
+#footer-text-box-mobile {
   display: none;
 }
 }
 
+@media (max-width: 1023px) {
+  #graph-area {
+    display: none;
+  }
+  #viz-loader {
+    display: none;
+  }
+  #footer-text-box {
+    display: none;
+  }
+  #footer-text-box-mobile {
+    postion: relative;
+    margin-top: 0;
+    width: 100%;
+    margin-left: 0;
+    padding-right: 0;
+    padding-left: 0;
+  }
 
+  #dropdown-viz {
+    opacity: 0;
+  }
+}
+
+#dropdown-viz {
+  display: none;
+  background-color: #f1efea;
+  margin-top: -100px;
+}
 
 /* Legend styles */
 
@@ -196,7 +246,7 @@ div.tooltip {
   font-size: 12px;
   line-height: 20px;
   background: #a5a4a0;
-  color: #2A2B2C;
+  color: #1a1a1a;
   pointer-events: none;
 }
 
@@ -217,12 +267,12 @@ div.tooltip {
 .h4 {
   margin-left: 6rem;
   padding-bottom: 8px;
-  width: 12rem;
+  width: 14rem;
 }
 
 h2 a {
   text-decoration: none;
-  color: #F75434;
+  color: #36c1ab;
 }
 
 @media (min-width: 1440px) {
@@ -234,15 +284,34 @@ h2 a {
     padding-right: 15rem;
     padding-left: 6rem;
   }
+
+  #footer-text-box {
+    postion: relative;
+    margin-top: 0;
+    width: calc(100% - 129px);
+    margin-left: 129px;
+    padding-right: 15rem;
+    padding-left: 6rem;
+  }
 }
 @media (max-width: 1439px) {
   #about-text {
     postion: relative;
     margin-top: 10rem;
-    width: 100%;
+    width: calc(100% - 129px);
     margin-left: 129px;
     padding-right: 15rem;
     padding-left: 6rem;
+  }
+
+  #footer-text-box {
+    postion: relative;
+    margin-top: 0;
+    width: calc(100% - 129px);
+    margin-left: 129px;
+    padding-right: 15rem;
+    padding-left: 6rem;
+
   }
 
   #error-text {
@@ -271,7 +340,7 @@ h2 a {
 @media (max-width: 991px) {
   #error-text {
     postion: relative;
-    margin-top: 8rem;
+    margin-top: 10rem;
     width: 100%;
     margin-left: 0;
     padding-right: 0;
@@ -287,13 +356,15 @@ h2 a {
     padding-left: 0;
   }
 
+
+
   h1,
   .h1 {
     font-size: 24px;
     font-weight: 400;
     line-height: 30px;
     text-align: left;
-    color: #2A2B2C;
+    color: #1a1a1a;
 
   }
 
@@ -306,20 +377,15 @@ h2 a {
 
   }
 
+
   .h4 {
-    border-bottom: 3px solid #2A2B2C;
+    border-bottom: 3px solid #1a1a1a;
     margin-left: 3rem;
     padding-bottom: 8px;
-    width: 12rem;
+    width: 14rem;
     margin-right: 15px;
   }
 
-}
-
-
-
-#graph-area {
-  position: absolute;
 }
 
 @media (max-width: 399px) {
@@ -351,5 +417,3 @@ q:before {
 q:after {
   content: close-quote;
 }
-</style>
-
