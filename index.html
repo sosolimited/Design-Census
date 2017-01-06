@@ -427,20 +427,29 @@
         // For modifications to axis ticks after they've been created.
         function postTickCreation() {
 
-          // For clamped scales, add a '+' to the end of the max tick label.
+          // Add a '+' to the end of the max tick's text...
+          // ... for clamped scales.
           if (curQuestion1.type === 'text') {
             if (xScale.clamp() === true) {
-              var s = svg.selectAll('.x .tick text').last();
-              var t = s.text();
-              s.text(t + '+');
+              addPlusToLastTick('x');
             }
+          }
+          // ... and for questions that use 'enable_plus'.
+          else if (curQuestion1.attributes.enable_plus) {
+            addPlusToLastTick('x');
           }
           if (curQuestion2.type === 'text') {
             if (yScale.clamp() === true) {
-              var s = svg.selectAll('.y .tick text').last();
-              var t = s.text();
-              s.text(t + '+');
+              addPlusToLastTick('y');
             }
+          } else if (curQuestion2.attributes.enable_plus) {
+            addPlusToLastTick('y');
+          }
+
+          function addPlusToLastTick(iAxis) {
+            var s = svg.selectAll('.'+ iAxis +' .tick text').last();
+            var t = s.text();
+            s.text(t + '+');
           }
 
         }
